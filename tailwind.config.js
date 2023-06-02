@@ -1,3 +1,5 @@
+import defaultTheme from "tailwindcss/defaultTheme";
+
 /** @type {import('tailwindcss').Config} */
 module.exports = {
   content: ["./src/**/*.{js,jsx,ts,tsx}"],
@@ -5,6 +7,7 @@ module.exports = {
     colors: {
       blurple: "#5865F2",
       black: "#23272A",
+      white: "#FFFFFF",
       green: "#57F287",
       yellow: "#FEE75C",
       red: "#ED4245",
@@ -19,6 +22,10 @@ module.exports = {
         200: "#ebedef",
         100: "#f2f3f5",
       },
+    },
+    fontFamily: {
+      sans: ["Roboto", ...defaultTheme.fontFamily.sans],
+      headline: ["Poppins", "sans-serif"],
     },
     extend: {},
   },
