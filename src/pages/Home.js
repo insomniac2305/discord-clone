@@ -1,4 +1,5 @@
 import { Link } from "react-router-dom";
+import { FaGithub, FaExternalLinkAlt } from "react-icons/fa";
 import Logo from "../components/Logo";
 import HomeBgMain from "../assets/home-bg-main.svg";
 import HomeBgLeft from "../assets/home-bg-left.svg";
@@ -6,59 +7,76 @@ import HomeBgRight from "../assets/home-bg-right.svg";
 
 function Home() {
   return (
-    <div className="h-full flex flex-col">
-      <div className="bg-[#404eed] text-white text-base relative flex-1">
-        <div>
-          <header>
-            <nav>
-              <Link aria-label="Home" to="/">
-                <Logo />
-              </Link>
-              <div>
-                <Link to="/login">Login</Link>
-              </div>
-            </nav>
-          </header>
+    <div className="flex h-full flex-col">
+      <div className="relative flex-1 overflow-hidden bg-[#404eed] text-base text-white">
+        <div className="flex justify-center">
+          <nav className="flex items-center justify-between p-4 md:p-8 w-full max-w-screen-xl">
+            <Link aria-label="Home" to="/">
+              <Logo />
+            </Link>
+            <Link className="rounded-full bg-white px-4 py-2 align-middle text-sm tracking-tight text-black transition-all duration-200 hover:text-blurple hover:shadow-xl" to="/login">
+              Login
+            </Link>
+          </nav>
         </div>
-        <div>
-          <div>
-            <h1 className="font-headline text-2xl">Imagine a Place&nbsp;…</h1>
-            <div>
-              ...where you can belong to a school club, a gaming group, or a worldwide art community. Where just you and
-              a handful of friends can spend time together. A place that makes it easy to talk every day and hang out
-              more often.
+        <div className="flex lg:justify-center">
+          <div className="px-4 py-8 md:max-w-[35rem] md:px-8 lg:max-w-screen-md	 lg:text-center">
+            <div className="py-4">
+              <h1 className="mb-4 font-headline text-2xl md:text-6xl lg:my-8">Imagine a Place&nbsp;…</h1>
+              <div className="mb-4 md:text-xl">
+                ...where you can belong to a school club, a gaming group, or a worldwide art community. Where just you
+                and a handful of friends can spend time together. A place that makes it easy to talk every day and hang
+                out more often.
+              </div>
+            </div>
+            <div className="flex flex-wrap items-center gap-6 lg:justify-center">
+              <a
+                className="z-10 box-content flex h-6 shrink-0 items-center gap-2 rounded-full bg-white px-8 py-4 text-lg font-medium text-black transition-all duration-200 hover:text-blurple hover:shadow-xl"
+                href="https://discord.com/"
+              >
+                <FaExternalLinkAlt/>
+                Go to real Discord
+              </a>
+              <Link
+                className="z-10 box-content flex h-6 shrink-0 items-center rounded-full bg-black px-8 py-4 text-lg font-medium transition-all duration-200 hover:bg-gray-800 hover:shadow-xl"
+                to="/app"
+              >
+                Open Discord clone
+              </Link>
             </div>
           </div>
-          <div>
-            <a href="https://discord.com/">
-              <svg width="24" height="24" viewBox="0 0 24 24">
-                <g fill="currentColor">
-                  <path d="M17.707 10.708L16.293 9.29398L13 12.587V2.00098H11V12.587L7.70697 9.29398L6.29297 10.708L12 16.415L17.707 10.708Z"></path>
-                  <path d="M18 18.001V20.001H6V18.001H4V20.001C4 21.103 4.897 22.001 6 22.001H18C19.104 22.001 20 21.103 20 20.001V18.001H18Z"></path>
-                </g>
-              </svg>
-              Get the real discord
-            </a>
-            <Link to="/app">Open discord clone</Link>
-          </div>
         </div>
         <div>
-          <img className="absolute top-0 left-0 h-full w-full object-cover" src={HomeBgMain} alt="" />
-          <img className="absolute bottom-0 left-0 -ml-20 md:hidden lg:block" src={HomeBgLeft} alt="" />
-          <img className="absolute bottom-0 right-0 -mr-20 hidden md:block" src={HomeBgRight} alt="" />
+          <img className="absolute bottom-0 left-0 h-4/5 w-full object-cover" src={HomeBgMain} alt="" />
+          <img
+            className="absolute bottom-0 left-0 -ml-20 md:hidden lg:left-1/2 lg:-ml-[54rem] lg:block"
+            src={HomeBgLeft}
+            alt=""
+          />
+          <img
+            className="absolute bottom-0 right-0 -mr-20 hidden md:block lg:left-1/2 lg:ml-[16rem]"
+            src={HomeBgRight}
+            alt=""
+          />
         </div>
       </div>
-      <div role="navigation">
-        <div>
-          <a href="https://github.com/insomniac2305" title="insomniac2305 on Github">
-            Github Link
-          </a>
-        </div>
-        <div>
+      <div className="bg-black p-4 text-white flex items-center flex-col" role="navigation">
+        <div className="flex items-center justify-between border-b border-b-blurple pb-4 w-full max-w-screen-xl">
           <a aria-label="Home" href="/">
             <Logo />
           </a>
-          <Link to="/register">Register</Link>
+          <Link className="rounded-full bg-blurple px-4 py-2 align-middle text-sm tracking-tight transition-all duration-200 hover:brightness-125 hover:shadow-xl" to="/register">
+            Register
+          </Link>
+        </div>
+        <div className="mt-4 flex justify-center w-full">
+          <a
+            href="https://github.com/insomniac2305"
+            className="flex items-center gap-2 text-sm"
+            title="insomniac2305 on Github"
+          >
+            <FaGithub className="text-xl" /> built by insomniac2305
+          </a>
         </div>
       </div>
     </div>
