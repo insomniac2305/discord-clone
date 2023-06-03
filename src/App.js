@@ -1,8 +1,8 @@
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import Main from "./pages/Main.js";
 import Home from "./pages/Home.js";
-import Login from "./pages/Login.js";
-import Register from "./pages/Register.js";
+import UserAuth from "./pages/UserAuth.js";
+import {LOGIN , REGISTER} from "./util/Constants.js";
 
 const router = createBrowserRouter([
   {
@@ -15,11 +15,11 @@ const router = createBrowserRouter([
   },
   {
     path: "/login",
-    element: <Login />,
+    element: <UserAuth mode={LOGIN} />,
   },
   {
     path: "/register",
-    element: <Register />,
+    element: <UserAuth mode={REGISTER} />,
   },
 ]);
 
