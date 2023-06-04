@@ -1,11 +1,18 @@
 import Login from "../components/Login.js";
 import Register from "../components/Register.js";
+import { LOGIN, REGISTER } from "../util/Constants.js";
+import AuthBackground from "../components/AuthBackground.js";
 
 function UserAuth(props) {
   return (
     <>
-      <Login />
-      <div>{props.mode}</div>
+      <div className="absolute top-0 left-0 -right-0 -bottom-0 -z-10">
+        <AuthBackground />
+      </div>
+      <div className="flex h-full w-full flex-col sm:items-center sm:justify-center">
+        {props.mode === LOGIN && <Login />}
+        {props.mode === REGISTER && <Register />}
+      </div>
     </>
   );
 }
