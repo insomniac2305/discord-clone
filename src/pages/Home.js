@@ -14,7 +14,7 @@ function Home() {
             <Link aria-label="Home" to="/">
               <Logo />
             </Link>
-            <Link className="rounded-full bg-white px-4 py-2 align-middle text-sm tracking-tight text-black transition-all duration-200 hover:text-blurple hover:shadow-xl" to="/login">
+            <Link className="rounded-full bg-white px-4 py-2 align-middle text-sm tracking-tight text-black transition-all duration-200 hover:text-blurple-400 hover:shadow-xl" to="/login">
               Login
             </Link>
           </nav>
@@ -31,7 +31,7 @@ function Home() {
             </div>
             <div className="flex flex-wrap items-center gap-6 lg:justify-center">
               <a
-                className="z-10 box-content flex h-6 shrink-0 items-center gap-2 rounded-full bg-white px-8 py-4 text-lg font-medium text-black transition-all duration-200 hover:text-blurple hover:shadow-xl"
+                className="z-10 box-content flex h-6 shrink-0 items-center gap-2 rounded-full bg-white px-8 py-4 text-lg font-medium text-black transition-all duration-200 hover:text-blurple-400 hover:shadow-xl"
                 href="https://discord.com/"
               >
                 <FaExternalLinkAlt/>
@@ -61,11 +61,11 @@ function Home() {
         </div>
       </div>
       <div className="bg-black p-4 text-white flex items-center flex-col" role="navigation">
-        <div className="flex items-center justify-between border-b border-b-blurple pb-4 w-full max-w-screen-xl">
+        <div className="flex items-center justify-between border-b border-b-blurple-400 pb-4 w-full max-w-screen-xl">
           <a aria-label="Home" href="/">
             <Logo />
           </a>
-          <Link className="rounded-full bg-blurple px-4 py-2 align-middle text-sm tracking-tight transition-all duration-200 hover:brightness-125 hover:shadow-xl" to="/register">
+          <Link className="rounded-full bg-blurple-400 px-4 py-2 align-middle text-sm tracking-tight transition-all duration-200 hover:brightness-125 hover:shadow-xl" to="/register">
             Register
           </Link>
         </div>
