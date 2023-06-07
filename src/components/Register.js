@@ -16,11 +16,11 @@ function Register() {
       <div className="flex h-full w-full flex-col items-center gap-5 bg-gray-800 px-4 py-6 text-gray-300 sm:h-auto sm:w-[30rem] sm:rounded sm:shadow-md">
         <Logo />
         <h1 className="text-xl font-bold tracking-wide">Create new account</h1>
-        <TextInput label="E-Mail" type="email" name="email" value={mail} onChange={setMail} required={true} />
+        <TextInput label="E-Mail" type="email" name="register-email" value={mail} onChange={setMail} required={true} />
         <TextInput
           label="Username"
           type="text"
-          name="username"
+          name="register-username"
           value={username}
           onChange={setUsername}
           required={true}
@@ -28,7 +28,7 @@ function Register() {
         <TextInput
           label="Password"
           type="password"
-          name="password"
+          name="register- password"
           value={password}
           onChange={setPassword}
           required={true}

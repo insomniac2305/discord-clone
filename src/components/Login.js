@@ -15,9 +15,9 @@ function Login() {
       <div className="flex h-full w-full flex-col items-center gap-5 bg-gray-800 px-4 py-6 text-gray-300 sm:h-auto sm:w-[30rem] sm:rounded sm:shadow-md">
         <Logo />
         <h1 className="text-xl font-bold tracking-wide">Welcome back!</h1>
-        <TextInput label="E-Mail" type="email" name="email" value={mail} onChange={setMail} required={true} />
+        <TextInput label="E-Mail" type="email" name="login-email" value={mail} onChange={setMail} required={true} />
         <div className="w-full">
-          <TextInput label="Password" type="password" name="password" value={password} onChange={setPassword} required={true} />
+          <TextInput label="Password" type="password" name="login-password" value={password} onChange={setPassword} required={true} />
           <p className="mt-1 w-full text-left text-xs">
             <LinkButton text="Forgot password?" />
           </p>
