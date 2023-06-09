@@ -1,9 +1,9 @@
+import { useNavigate } from "react-router-dom";
+import { LOGIN, REGISTER } from "../util/Constants.js";
 import Login from "../components/Login.js";
 import Register from "../components/Register.js";
-import { LOGIN, REGISTER } from "../util/Constants.js";
 import AuthBackground from "../components/AuthBackground.js";
 import Modal from "../components/Modal.js";
-import { useNavigate } from "react-router-dom";
 
 function UserAuth({ mode }) {
   const navigate = useNavigate();
@@ -14,16 +14,12 @@ function UserAuth({ mode }) {
         <AuthBackground />
       </div>
       <div className="flex h-full w-full sm:items-center sm:justify-center">
-        {/* {mode === LOGIN && ( */}
-          <Modal open={mode === LOGIN} onClose={() => navigate("/register")} dimBackdrop={false} locked={true}>
-            <Login />
-          </Modal>
-        {/* )} */}
-        {/* {mode === REGISTER && ( */}
-          <Modal open={mode === REGISTER} onClose={() => navigate("/login")} dimBackdrop={false} locked={true}>
-            <Register />
-          </Modal>
-        {/* )} */}
+        <Modal open={mode === LOGIN} dimBackdrop={false} locked={true}>
+          <Login />
+        </Modal>
+        <Modal open={mode === REGISTER} dimBackdrop={false} locked={true}>
+          <Register />
+        </Modal>
       </div>
     </>
   );
