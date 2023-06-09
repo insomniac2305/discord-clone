@@ -25,9 +25,11 @@ function Modal({ open, onClose, children, locked, dimBackdrop, ...props }) {
 
     if (open) {
       modalRef.current.open || modalRef.current.showModal();
-      classArray.push("opacity-100 translate-y-0 scale-100");
+      classArray.push("sm:opacity-100 translate-y-0 sm:scale-100");
     } else {
-      classArray.push("opacity-0 -translate-y-10 scale-110 backdrop:bg-[#00000000] backdrop:backdrop-blur-0");
+      classArray.push(
+        "sm:opacity-0 translate-y-full sm:-translate-y-10 sm:scale-110 backdrop:bg-[#00000000] backdrop:backdrop-blur-0"
+      );
     }
 
     setClasses(classArray.join(" "));
@@ -47,7 +49,8 @@ function Modal({ open, onClose, children, locked, dimBackdrop, ...props }) {
       onCancel={onCancel}
       onTransitionEnd={onTransitionEnd}
       className={
-        classes + " rounded p-0 transition-all ease-[cubic-bezier(.25,.25,.3,1.5)] duration-200 focus:outline-0 active:outline-0"
+        classes +
+        " h-full max-h-full min-h-fit w-full min-w-fit max-w-full p-0 transition-all duration-300 ease-in focus:outline-0 active:outline-0 sm:h-fit sm:w-fit sm:rounded sm:duration-200 sm:ease-[cubic-bezier(.25,.25,.3,1.5)]"
       }
     >
       {children}
