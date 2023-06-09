@@ -1,6 +1,6 @@
 function LinkButton(props) {
   return (
-    <button className="text-blue hover:underline" onClick={props.onClick}>
+    <button type="button" className="text-blue hover:underline" onClick={props.onClick}>
       {props.text}
     </button>
   );

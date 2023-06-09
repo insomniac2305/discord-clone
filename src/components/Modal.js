@@ -3,6 +3,7 @@ import { useEffect, useRef, useState } from "react";
 function Modal({ open, onClose, children, locked, dimBackdrop, ...props }) {
   const modalRef = useRef(null);
   const [classes, setClasses] = useState("");
+  const [renderContent, setRenderContent] = useState(false);
 
   const onClick = (e) => {
     if (e.target === modalRef.current && !locked) {
@@ -24,6 +25,7 @@ function Modal({ open, onClose, children, locked, dimBackdrop, ...props }) {
     );
 
     if (open) {
+      setRenderContent(true);
       modalRef.current.open || modalRef.current.showModal();
       classArray.push("sm:opacity-100 translate-y-0 sm:scale-100");
     } else {
@@ -38,23 +40,26 @@ function Modal({ open, onClose, children, locked, dimBackdrop, ...props }) {
   const onTransitionEnd = () => {
     if (!open) {
       modalRef.current.close();
+      setRenderContent(false);
     }
   };
 
   return (
-    <dialog
-      ref={modalRef}
-      onClick={onClick}
-      onClose={onClose}
-      onCancel={onCancel}
-      onTransitionEnd={onTransitionEnd}
-      className={
-        classes +
-        " h-full max-h-full min-h-fit w-full min-w-fit max-w-full p-0 transition-all duration-300 ease-in focus:outline-0 active:outline-0 sm:h-fit sm:w-fit sm:rounded sm:duration-200 sm:ease-[cubic-bezier(.25,.25,.3,1.5)]"
-      }
-    >
-      {children}
-    </dialog>
+    <>
+      <dialog
+        ref={modalRef}
+        onClick={onClick}
+        onClose={onClose}
+        onCancel={onCancel}
+        onTransitionEnd={onTransitionEnd}
+        className={
+          classes +
+          " h-full max-h-full min-h-fit w-full min-w-fit max-w-full p-0 transition-all duration-300 ease-in focus:outline-0 active:outline-0 sm:h-fit sm:w-fit sm:rounded sm:duration-200 sm:ease-[cubic-bezier(.25,.25,.3,1.5)]"
+        }
+      >
+        {renderContent && children}
+      </dialog>
+    </>
   );
 }
 
