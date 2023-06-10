@@ -5,9 +5,10 @@ function PrimaryButton({ text, onClick, loading, type }) {
     <button
       type={type || "button"}
       onClick={onClick}
-      className="w-full rounded bg-blurple-400 p-3 font-medium hover:bg-blurple-500 active:bg-blurple-600"
+      className="w-full rounded bg-blurple-400 p-3 font-medium text-white hover:bg-blurple-500 active:bg-blurple-600"
+      disabled={loading}
     >
-      {loading && <CgSpinnerAlt className="animate-spin inline-block text-xl" />}
+      {loading && <CgSpinnerAlt className="inline-block animate-spin text-xl" />}
       {loading || text}
     </button>
   );
