@@ -1,7 +1,7 @@
-function LinkButton(props) {
+function LinkButton({text, onClick}) {
   return (
-    <button type="button" className="text-blue hover:underline" onClick={props.onClick}>
-      {props.text}
+    <button type="button" className="text-blue hover:underline" onClick={onClick}>
+      {text}
     </button>
   );
 }
