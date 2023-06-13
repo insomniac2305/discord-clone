@@ -32,7 +32,7 @@ function Main() {
       )}
       <button onClick={() => setOpenModal(NEWSERVER)}>New Server</button>
       <Modal open={openModal === NEWSERVER} dimBackdrop={true} locked={false} onClose={() => setOpenModal(null)}>
-        <NewServer />
+        <NewServer onClose={() => setOpenModal(null)} />
       </Modal>
     </>
   );
