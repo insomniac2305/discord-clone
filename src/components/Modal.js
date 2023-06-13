@@ -49,7 +49,6 @@ function Modal({ open, onClose, children, locked, dimBackdrop, ...props }) {
       <dialog
         ref={modalRef}
         onClick={onClick}
-        onClose={onClose}
         onCancel={onCancel}
         onTransitionEnd={onTransitionEnd}
         className={
