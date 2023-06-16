@@ -47,7 +47,7 @@ function NewServer({ onClose }) {
   return (
     <form
       onSubmit={onSubmit}
-      className="flex h-full w-full flex-col items-center gap-5 bg-gray-800 px-4 py-6 text-gray-300 sm:h-auto sm:w-[30rem] sm:rounded sm:shadow-md"
+      className="flex h-full w-full flex-col items-center gap-5 bg-gray-800 px-4 py-6 text-gray-300 sm:h-auto sm:w-[30rem] sm:shadow-md"
     >
       <h1 className="text-xl font-bold tracking-wide">Create your own server</h1>
       <p className="text-center">
