@@ -14,11 +14,11 @@ function Main() {
   const [openModal, setOpenModal] = useState(null);
   let { serverId } = useParams();
 
-  // useEffect(() => {
-  //   if (!user || error) {
-  //     navigate("/login");
-  //   }
-  // }, [user, error, navigate]);
+  useEffect(() => {
+    if (!user || error) {
+      navigate("/login");
+    }
+  }, [user, error, navigate]);
 
   return (
     <div className="flex h-full">
