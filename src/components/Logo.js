@@ -1,3 +1,5 @@
+import { BsDiscord } from "react-icons/bs";
+
 function Logo() {
   return (
     <svg width="124" height="34" viewBox="0 0 124 34">
@@ -17,3 +19,5 @@ function Logo() {
 }
 
 export default Logo;
+
+export const LogoNoText = BsDiscord;
