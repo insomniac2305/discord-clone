@@ -1,7 +1,8 @@
 import { useNavigate, useParams } from "react-router-dom";
 import SidebarItem from "./SidebarItem";
 import { LogoNoText } from "./Logo";
-import { HiOutlinePlus } from "react-icons/hi";
+import { HiOutlinePlus, HiVolumeUp } from "react-icons/hi";
+import { FaHashtag } from "react-icons/fa";
 
 function Sidebar({ onNewServer, show, toggle }) {
   const navigate = useNavigate();
@@ -24,7 +25,7 @@ function Sidebar({ onNewServer, show, toggle }) {
             <LogoNoText className="text-3xl" />
           </div>
         </SidebarItem>
-        <div className="w-1/2 rounded-full border border-gray-600" />
+        <div className="w-1/2 rounded-full border border-gray-700" />
         <SidebarItem popupText="Server 1" onClick={() => navigate("/app/1")} active={serverId === "1"}>
           <div className="flex h-full w-full items-center justify-center bg-green-400">S1</div>
         </SidebarItem>
@@ -40,10 +41,24 @@ function Sidebar({ onNewServer, show, toggle }) {
           </div>
         </SidebarItem>
       </nav>
-      <div className="flex min-w-[15.5rem] flex-col bg-gray-800 font-medium text-gray-500">
-        <div>Channel 1</div>
-        <div>Channel 2</div>
-        <div>Channel 3</div>
+      <div className="flex min-w-[15.5rem] flex-col bg-gray-800  text-gray-600">
+        <div className="flex h-12 items-center px-4 shadow shadow-black">
+          <h1 className="font-bold text-gray-100">Server 1</h1>
+        </div>
+        <ul className="flex flex-col gap-2 p-4 font-medium">
+          <li className="flex items-center gap-2">
+            <FaHashtag />
+            <span className="text-gray-100">general</span>
+          </li>
+          <li className="flex items-center gap-2">
+            <HiVolumeUp />
+            <span>general</span>
+          </li>
+          <li className="flex items-center gap-2">
+            <HiVolumeUp />
+            <span>Channel 1</span>
+          </li>
+        </ul>
       </div>
     </div>
   );
