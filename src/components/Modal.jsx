@@ -1,6 +1,6 @@
-import { useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 
-function Modal({ open, onClose, children, locked, dimBackdrop, ...props }) {
+function Modal({ open, onClose, children, locked, dimBackdrop }) {
   const modalRef = useRef(null);
   const [classes, setClasses] = useState("");
   const [renderContent, setRenderContent] = useState(false);

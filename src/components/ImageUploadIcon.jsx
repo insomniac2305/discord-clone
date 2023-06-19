@@ -1,3 +1,5 @@
+import React from "react";
+
 function ImageUploadIcon() {
   return (
     <svg width="80" height="80" viewBox="0 0 80 80" fill="none">

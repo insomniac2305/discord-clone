@@ -1,4 +1,6 @@
-function LinkButton({text, onClick}) {
+import React from "react";
+
+function LinkButton({ text, onClick }) {
   return (
     <button type="button" className="text-blue hover:underline" onClick={onClick}>
       {text}
