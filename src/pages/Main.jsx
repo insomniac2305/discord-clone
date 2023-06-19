@@ -1,6 +1,6 @@
 import { auth } from "../firebase";
 import { useAuthState } from "react-firebase-hooks/auth";
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import Modal from "../components/Modal";
 import NewServer from "../components/NewServer";
@@ -63,10 +63,11 @@ function Main() {
         {!serverId && (
           <div className="flex h-full w-full flex-col items-center justify-center gap-8 p-4">
             <img src={MainBg} alt="Wumpus" />
-            <p className="text-center text-gray-500">No one's around to play with Wumpus!</p>
+            <p className="text-center text-gray-500">No one&apos;s around to play with Wumpus!</p>
           </div>
         )}
       </div>
+      {showMembers && <div>Members Placeholder</div>}
       <Modal open={openModal === NEWSERVER} dimBackdrop={true} locked={false} onClose={() => setOpenModal(null)}>
         <NewServer onClose={() => setOpenModal(null)} />
       </Modal>

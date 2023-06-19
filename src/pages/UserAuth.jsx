@@ -1,8 +1,9 @@
-import { LOGIN, REGISTER } from "../util/Constants.js";
-import Login from "../components/Login.js";
-import Register from "../components/Register.js";
-import AuthBackground from "../components/AuthBackground.js";
-import Modal from "../components/Modal.js";
+import React from "react";
+import { LOGIN, REGISTER } from "../util/Constants";
+import Login from "../components/Login";
+import Register from "../components/Register";
+import AuthBackground from "../components/AuthBackground";
+import Modal from "../components/Modal";
 
 function UserAuth({ mode }) {
   return (

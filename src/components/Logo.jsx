@@ -1,3 +1,4 @@
+import React from "react";
 import { BsDiscord } from "react-icons/bs";
 
 function Logo() {

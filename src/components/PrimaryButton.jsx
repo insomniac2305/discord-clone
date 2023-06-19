@@ -1,3 +1,4 @@
+import React from "react";
 import { CgSpinnerAlt } from "react-icons/cg";
 
 function PrimaryButton({ text, onClick, loading, type }) {

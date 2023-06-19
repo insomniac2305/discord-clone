@@ -1,10 +1,11 @@
+import React from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import SidebarItem from "./SidebarItem";
 import { LogoNoText } from "./Logo";
 import { HiOutlinePlus, HiVolumeUp } from "react-icons/hi";
 import { FaHashtag } from "react-icons/fa";
 
-function Sidebar({ onNewServer, show, toggle }) {
+function Sidebar({ onNewServer, show }) {
   const navigate = useNavigate();
   let { serverId } = useParams();
 

@@ -1,3 +1,5 @@
+import React from "react";
+
 function TextInput({ name, label, required, type, value, onChange }) {
   return (
     <div className="flex w-full flex-col">
