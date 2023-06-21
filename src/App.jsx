@@ -1,3 +1,4 @@
+import React from "react";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import Main from "./pages/Main";
 import Home from "./pages/Home";
@@ -11,6 +12,7 @@ const router = createBrowserRouter([
     children: [
       { index: true, element: <Main /> },
       { path: ":serverId", element: <Main /> },
+      { path: ":serverId/:channelId", element: <Main /> },
     ],
   },
   { path: "/login", element: <UserAuth mode={LOGIN} /> },

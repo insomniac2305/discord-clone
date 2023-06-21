@@ -3,8 +3,9 @@ import TextInput from "./TextInput";
 import PrimaryButton from "./PrimaryButton";
 import IconPicker from "./IconPicker";
 import { auth, db, storage } from "../firebase";
-import { addDoc, collection, updateDoc } from "firebase/firestore";
+import { addDoc, collection, doc, setDoc, updateDoc } from "firebase/firestore";
 import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
+import { CHANNEL_TEXT, CHANNEL_VOICE, ROLE_ADMIN } from "../util/Constants";
 
 function NewServer({ onClose }) {
   const [serverName, setServerName] = useState("");
@@ -21,7 +22,26 @@ function NewServer({ onClose }) {
       const newServerRef = await addDoc(collection(db, "servers"), {
         name: serverName,
         iconUrl: null,
-        adminUid: auth.currentUser.uid,
+      });
+
+      const serverChannelsCollection = collection(db, "serverChannels");
+
+      await addDoc(serverChannelsCollection, {
+        serverId: newServerRef.id,
+        name: "general",
+        type: CHANNEL_TEXT,
+      });
+
+      await addDoc(serverChannelsCollection, {
+        serverId: newServerRef.id,
+        name: "general",
+        type: CHANNEL_VOICE,
+      });
+
+      await setDoc(doc(db, "serverMembers", `${newServerRef.id}_${auth.currentUser.uid}`), {
+        userId: auth.currentUser.uid,
+        serverId: newServerRef.id,
+        role: ROLE_ADMIN,
       });
 
       if (serverIcon) {

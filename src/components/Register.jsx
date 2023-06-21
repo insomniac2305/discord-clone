@@ -6,7 +6,7 @@ import PrimaryButton from "./PrimaryButton";
 import { useNavigate } from "react-router-dom";
 import { auth, db } from "../firebase";
 import { useCreateUserWithEmailAndPassword } from "react-firebase-hooks/auth";
-import { addDoc, collection } from "firebase/firestore";
+import { doc, setDoc } from "firebase/firestore";
 
 function Register() {
   const [email, setEmail] = useState("");
@@ -32,8 +32,7 @@ function Register() {
     try {
       const createResponse = await createUserWithEmailAndPassword(email, password);
       const newUser = createResponse.user;
-      await addDoc(collection(db, "users"), {
-        uid: newUser.uid,
+      await setDoc(doc(db, "users", newUser.uid), {
         name: username,
         email,
       });

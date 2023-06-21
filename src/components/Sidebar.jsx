@@ -1,13 +1,80 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import SidebarItem from "./SidebarItem";
 import { LogoNoText } from "./Logo";
-import { HiOutlinePlus, HiVolumeUp } from "react-icons/hi";
-import { FaHashtag } from "react-icons/fa";
+import { HiOutlinePlus } from "react-icons/hi";
+import useUserServers from "../util/useUserServers";
+import { auth } from "../firebase";
+import calculateColor from "../util/CalculateColor";
+import ChannelItem from "./ChannelItem";
 
 function Sidebar({ onNewServer, show }) {
   const navigate = useNavigate();
-  let { serverId } = useParams();
+  let { serverId, channelId } = useParams();
+  const [heading, setHeading] = useState("");
+  const [servers, channels] = useUserServers(auth.currentUser && auth.currentUser.uid);
+
+  useEffect(() => {
+    if (serverId) {
+      if (servers) {
+        const currentServer = servers.find((server) => server.id === serverId);
+        currentServer && setHeading(currentServer.name);
+      } else {
+        setHeading("");
+      }
+    } else {
+      setHeading("Friends");
+    }
+  });
+
+  let serverList;
+
+  if (servers) {
+    serverList = servers.map((server) => {
+      let backgroundStyle;
+      if (server.iconUrl) {
+        backgroundStyle = {
+          backgroundImage: `url(${server.iconUrl})`,
+        };
+      } else {
+        const colors = calculateColor(server.name);
+        backgroundStyle = {
+          backgroundColor: colors.background,
+          color: colors.text,
+        };
+      }
+
+      return (
+        <SidebarItem
+          key={server.id}
+          popupText={server.name}
+          onClick={() => navigate("/app/" + server.id)}
+          active={serverId === server.id}
+        >
+          <div className="flex h-full w-full items-center justify-center bg-cover font-bold" style={backgroundStyle}>
+            {!server.iconUrl && server.name.charAt(0)}
+          </div>
+        </SidebarItem>
+      );
+    });
+  }
+
+  let channelList;
+
+  if (channels) {
+    const serverChannels = channels.filter((channel) => channel.serverId === serverId);
+    channelList = serverChannels.map((channel) => {
+      return (
+        <ChannelItem
+          key={channel.id}
+          type={channel.type}
+          name={channel.name}
+          active={channel.id === channelId}
+          linkTo={`/app/${channel.serverId}/${channel.id}`}
+        />
+      );
+    });
+  }
 
   return (
     <div
@@ -27,15 +94,9 @@ function Sidebar({ onNewServer, show }) {
           </div>
         </SidebarItem>
         <div className="w-1/2 rounded-full border border-gray-700" />
-        <SidebarItem popupText="Server 1" onClick={() => navigate("/app/1")} active={serverId === "1"}>
-          <div className="flex h-full w-full items-center justify-center bg-green-400">S1</div>
-        </SidebarItem>
-        <SidebarItem popupText="Server 2" onClick={() => navigate("/app/2")} active={serverId === "2"}>
-          <div className="flex h-full w-full items-center justify-center bg-yellow">S2</div>
-        </SidebarItem>
-        <SidebarItem popupText="Server 3" onClick={() => navigate("/app/3")} active={serverId === "3"}>
-          <div className="flex h-full w-full items-center justify-center bg-blue">S3</div>
-        </SidebarItem>
+
+        {serverList}
+
         <SidebarItem popupText="New Server" onClick={onNewServer}>
           <div className="flex h-full w-full items-center justify-center bg-gray-700 text-2xl text-green-400 transition-all hover:bg-green-500 hover:text-white">
             <HiOutlinePlus />
@@ -44,22 +105,9 @@ function Sidebar({ onNewServer, show }) {
       </nav>
       <div className="flex min-w-[15.5rem] flex-col bg-gray-800  text-gray-600">
         <div className="flex h-12 items-center px-4 shadow shadow-black">
-          <h1 className="font-bold text-gray-100">Server 1</h1>
+          <h1 className="font-bold text-gray-100">{heading}</h1>
         </div>
-        <ul className="flex flex-col gap-2 p-4 font-medium">
-          <li className="flex items-center gap-2">
-            <FaHashtag />
-            <span className="text-gray-100">general</span>
-          </li>
-          <li className="flex items-center gap-2">
-            <HiVolumeUp />
-            <span>general</span>
-          </li>
-          <li className="flex items-center gap-2">
-            <HiVolumeUp />
-            <span>Channel 1</span>
-          </li>
-        </ul>
+        <ul className="flex flex-col px-2 py-4 font-medium">{channelList}</ul>
       </div>
     </div>
   );
