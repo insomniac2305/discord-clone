@@ -22,7 +22,10 @@ function Main() {
   let { serverId } = useParams();
 
   useEffect(() => {
-    if (!user || error || loading) {
+    if (loading) {
+      return;
+    }
+    if (!user || error) {
       navigate("/login");
     }
   }, [user, error, loading, navigate]);
