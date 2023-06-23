@@ -3,16 +3,14 @@ import { useNavigate, useParams } from "react-router-dom";
 import SidebarItem from "./SidebarItem";
 import { LogoNoText } from "./Logo";
 import { HiOutlinePlus } from "react-icons/hi";
-import useUserServers from "../util/useUserServers";
-import { auth } from "../firebase";
 import calculateColor from "../util/CalculateColor";
 import ChannelItem from "./ChannelItem";
+import { CHANNEL_TEXT } from "../util/Constants";
 
-function Sidebar({ onNewServer, show }) {
+function Sidebar({ onNewServer, isVisible, servers, channels, onToggle }) {
   const navigate = useNavigate();
   let { serverId, channelId } = useParams();
   const [heading, setHeading] = useState("");
-  const [servers, channels] = useUserServers(auth.currentUser && auth.currentUser.uid);
 
   useEffect(() => {
     if (serverId) {
@@ -43,12 +41,16 @@ function Sidebar({ onNewServer, show }) {
           color: colors.text,
         };
       }
+      let firstTextChannel;
+      if (channels) {
+        firstTextChannel = channels.find((channel) => channel.serverId === server.id && channel.type === CHANNEL_TEXT);
+      }
 
       return (
         <SidebarItem
           key={server.id}
           popupText={server.name}
-          onClick={() => navigate("/app/" + server.id)}
+          onClick={() => navigate(`/app/${server.id}/${firstTextChannel.id}`)}
           active={serverId === server.id}
         >
           <div className="flex h-full w-full items-center justify-center bg-cover font-bold" style={backgroundStyle}>
@@ -71,6 +73,7 @@ function Sidebar({ onNewServer, show }) {
           name={channel.name}
           active={channel.id === channelId}
           linkTo={`/app/${channel.serverId}/${channel.id}`}
+          onClick={onToggle}
         />
       );
     });
@@ -79,7 +82,7 @@ function Sidebar({ onNewServer, show }) {
   return (
     <div
       className={
-        "flex w-fit -translate-x-[0rem] transition-all " + (show ? "-translate-x-[0rem]" : "-translate-x-[20rem]")
+        "flex w-fit transition-all " + (isVisible ? "-translate-x-[0rem]" : "-translate-x-[20rem]")
       }
     >
       <nav className="flex min-w-[4.5rem] flex-col items-center gap-2 bg-gray-900 py-3">

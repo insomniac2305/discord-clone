@@ -4,22 +4,25 @@ import React, { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import Modal from "../components/Modal";
 import NewServer from "../components/NewServer";
-import { NEWSERVER } from "../util/Constants";
-import useWindowDimensions from "../util/WindowDimensions";
 import Sidebar from "../components/Sidebar";
-import MainBg from "../assets/main-bg.svg";
-import { HiMenu } from "react-icons/hi";
-import { FaHashtag } from "react-icons/fa";
-import { MdPeopleAlt } from "react-icons/md";
+import ChannelHeader from "../components/ChannelHeader";
+import { NEWSERVER, MAX_MOBILE_WIDTH } from "../util/Constants";
+import useWindowDimensions from "../util/useWindowDimensions";
+import useUserServers from "../util/useUserServers";
+import useToggle from "../util/useToggle";
+import ChannelPlaceholder from "../components/ChannelPlaceholder";
+import ChannelContent from "../components/ChannelContent";
 
 function Main() {
   const [user, loading, error] = useAuthState(auth);
   const navigate = useNavigate();
   const [openModal, setOpenModal] = useState(null);
-  const [showSidebar, setShowSidebar] = useState(true);
-  const [showMembers, setShowMembers] = useState(false);
+  const [isSidebarVisible, toggleSidebarVisible] = useToggle(true);
+  const [isMembersVisible, toggleMembersVisible] = useToggle(false);
   const { width } = useWindowDimensions();
-  let { serverId } = useParams();
+  const [servers, channels] = useUserServers(auth.currentUser && auth.currentUser.uid);
+  let { serverId, channelId } = useParams();
+  const [currentChannel, setCurrentChannel] = useState(null);
 
   useEffect(() => {
     if (loading) {
@@ -31,46 +34,44 @@ function Main() {
   }, [user, error, loading, navigate]);
 
   useEffect(() => {
-    if (width >= 1024) {
-      setShowSidebar(true);
+    if (width >= MAX_MOBILE_WIDTH && !isSidebarVisible) {
+      toggleSidebarVisible();
     }
   }, [width]);
 
-  const toggleSidebar = () => setShowSidebar((show) => !show);
-  const toggleMembers = () => setShowMembers((show) => !show);
+  useEffect(() => {
+    if (channels && channelId) {
+      const channelFromList = channels.find((channel) => channel.id === channelId);
+      setCurrentChannel({ ...channelFromList });
+    } else {
+      setCurrentChannel(null);
+    }
+  }, [channels, channelId]);
 
   return (
     <div className="flex h-full w-fit overflow-hidden lg:w-full">
-      <Sidebar onNewServer={() => setOpenModal(NEWSERVER)} show={showSidebar} toggle={toggleSidebar} />
+      <Sidebar
+        onNewServer={() => setOpenModal(NEWSERVER)}
+        isVisible={isSidebarVisible}
+        onToggle={() => width < MAX_MOBILE_WIDTH && toggleSidebarVisible()}
+        servers={servers}
+        channels={channels}
+      />
       <div
         className={
           "flex w-screen flex-col bg-gray-700 text-gray-100 transition-transform lg:w-full " +
-          (showSidebar ? "-translate-x-[0rem]" : "-translate-x-[20rem]")
+          (isSidebarVisible ? "-translate-x-[0rem]" : "-translate-x-[20rem]")
         }
       >
-        <div className="sticky top-0 flex flex-row items-center gap-4 px-4 shadow-sm shadow-black">
-          {width < 1024 && (
-            <button onClick={toggleSidebar} className="text-2xl">
-              <HiMenu />
-            </button>
-          )}
-          <div className="flex items-center gap-2 px-2">
-            <FaHashtag className="text-xl text-gray-600" />
-            <h1 className="font-medium text-gray-100">Title</h1>
-          </div>
-          <div className="h-12 flex-1"></div>
-          <button onClick={toggleMembers} className="text-2xl text-gray-500">
-            <MdPeopleAlt />
-          </button>
-        </div>
-        {!serverId && (
-          <div className="flex h-full w-full flex-col items-center justify-center gap-8 p-4">
-            <img src={MainBg} alt="Wumpus" />
-            <p className="text-center text-gray-500">No one&apos;s around to play with Wumpus!</p>
-          </div>
-        )}
+        <ChannelHeader
+          showSidebarToggle={width < MAX_MOBILE_WIDTH}
+          onToggleSidebar={toggleSidebarVisible}
+          onToggleMembers={toggleMembersVisible}
+          currentChannel={currentChannel}
+        />
+        {!serverId && <ChannelPlaceholder />}
+        {!!serverId && <ChannelContent currentChannel={currentChannel} isMembersVisible={isMembersVisible} />}
       </div>
-      {showMembers && <div>Members Placeholder</div>}
       <Modal open={openModal === NEWSERVER} dimBackdrop={true} locked={false} onClose={() => setOpenModal(null)}>
         <NewServer onClose={() => setOpenModal(null)} />
       </Modal>
