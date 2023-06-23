@@ -5,3 +5,4 @@ export const CHANNEL_TEXT = "text";
 export const CHANNEL_VOICE = "voice";
 export const ROLE_ADMIN = "admin";
 export const ROLE_MEMBER = "member";
+export const MAX_MOBILE_WIDTH = 1024;

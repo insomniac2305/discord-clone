@@ -7,6 +7,23 @@ html, body, #root {
   overflow: hidden;
 }
 
+* {
+  scrollbar-color: #1e1f22 #2b2d31;
+  scrollbar-width: thin;
+}
+
+::-webkit-scrollbar {  
+  @apply w-2;
+}
+
+::-webkit-scrollbar-track {
+  @apply bg-gray-800 rounded-full;
+}
+
+::-webkit-scrollbar-thumb {
+  @apply bg-gray-900 rounded-full;
+}
+
 @font-face {
   font-family: Roboto;
   font-style: normal;
