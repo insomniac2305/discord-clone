@@ -1,8 +1,9 @@
 import React from "react";
 import ChannelMembers from "./ChannelMembers";
 import NewMessage from "./NewMessage";
+import MessageList from "./MessageList";
 
-function ChannelContent({ isMembersVisible }) {
+function ChannelContent({ isMembersVisible, currentChannel }) {
   return (
     <div className="relative flex h-full w-full overflow-hidden">
       <div
@@ -11,14 +12,10 @@ function ChannelContent({ isMembersVisible }) {
           (isMembersVisible ? "-translate-x-[15rem] md:w-[calc(100%-15rem)] md:-translate-x-0" : "-translate-x-[0]")
         }
       >
-        <div className="flex-1 overflow-y-auto overflow-x-hidden">
-          <ol className="flex flex-col">
-            <li>Message 1</li>
-            <li>Message 2</li>
-            <li>Message 3</li>
-          </ol>
+        <div className="my-4 flex flex-1 items-end overflow-y-auto overflow-x-hidden">
+          <MessageList />
         </div>
-        <NewMessage channelName={"general"} />
+        <NewMessage channelName={currentChannel && currentChannel.name} channelId={currentChannel && currentChannel.id} />
       </div>
       <ChannelMembers isVisible={isMembersVisible} />
     </div>
