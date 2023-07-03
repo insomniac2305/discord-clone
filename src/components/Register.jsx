@@ -4,9 +4,8 @@ import TextInput from "./TextInput";
 import LinkButton from "./LinkButton";
 import PrimaryButton from "./PrimaryButton";
 import { useNavigate } from "react-router-dom";
-import { auth, db } from "../firebase";
+import { auth } from "../firebase";
 import { useCreateUserWithEmailAndPassword } from "react-firebase-hooks/auth";
-import { doc, setDoc } from "firebase/firestore";
 
 function Register() {
   const [email, setEmail] = useState("");
@@ -32,10 +31,7 @@ function Register() {
     try {
       const createResponse = await createUserWithEmailAndPassword(email, password);
       const newUser = createResponse.user;
-      await setDoc(doc(db, "users", newUser.uid), {
-        name: username,
-        email,
-      });
+      await newUser.updateProfile({ displayName: username });
     } catch (err) {
       console.error(err);
     }
