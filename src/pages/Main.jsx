@@ -10,6 +10,7 @@ import { NEWSERVER, MAX_MOBILE_WIDTH } from "../util/Constants";
 import useWindowDimensions from "../util/useWindowDimensions";
 import useUserServers from "../util/useUserServers";
 import useToggle from "../util/useToggle";
+import AuthContext from "../util/AuthContext";
 import ChannelPlaceholder from "../components/ChannelPlaceholder";
 import ChannelContent from "../components/ChannelContent";
 
@@ -49,33 +50,35 @@ function Main() {
   }, [channels, channelId]);
 
   return (
-    <div className="flex h-full w-fit overflow-hidden lg:w-full">
-      <Sidebar
-        onNewServer={() => setOpenModal(NEWSERVER)}
-        isVisible={isSidebarVisible}
-        onToggle={() => width < MAX_MOBILE_WIDTH && toggleSidebarVisible()}
-        servers={servers}
-        channels={channels}
-      />
-      <div
-        className={
-          "flex w-screen flex-col bg-gray-700 text-gray-100 transition-transform lg:w-full " +
-          (isSidebarVisible ? "-translate-x-[0rem]" : "-translate-x-[20rem]")
-        }
-      >
-        <ChannelHeader
-          showSidebarToggle={width < MAX_MOBILE_WIDTH}
-          onToggleSidebar={toggleSidebarVisible}
-          onToggleMembers={toggleMembersVisible}
-          currentChannel={currentChannel}
+    <AuthContext.Provider value={user}>
+      <div className="flex h-full w-fit overflow-hidden lg:w-full">
+        <Sidebar
+          onNewServer={() => setOpenModal(NEWSERVER)}
+          isVisible={isSidebarVisible}
+          onToggle={() => width < MAX_MOBILE_WIDTH && toggleSidebarVisible()}
+          servers={servers}
+          channels={channels}
         />
-        {!serverId && <ChannelPlaceholder />}
-        {!!serverId && <ChannelContent currentChannel={currentChannel} isMembersVisible={isMembersVisible} />}
+        <div
+          className={
+            "flex w-screen flex-col bg-gray-700 text-gray-100 transition-transform lg:w-full " +
+            (isSidebarVisible ? "-translate-x-[0rem]" : "-translate-x-[20rem]")
+          }
+        >
+          <ChannelHeader
+            showSidebarToggle={width < MAX_MOBILE_WIDTH}
+            onToggleSidebar={toggleSidebarVisible}
+            onToggleMembers={toggleMembersVisible}
+            currentChannel={currentChannel}
+          />
+          {!serverId && <ChannelPlaceholder />}
+          {!!serverId && <ChannelContent currentChannel={currentChannel} isMembersVisible={isMembersVisible} />}
+        </div>
+        <Modal open={openModal === NEWSERVER} dimBackdrop={true} locked={false} onClose={() => setOpenModal(null)}>
+          <NewServer onClose={() => setOpenModal(null)} />
+        </Modal>
       </div>
-      <Modal open={openModal === NEWSERVER} dimBackdrop={true} locked={false} onClose={() => setOpenModal(null)}>
-        <NewServer onClose={() => setOpenModal(null)} />
-      </Modal>
-    </div>
+    </AuthContext.Provider>
   );
 }
 
