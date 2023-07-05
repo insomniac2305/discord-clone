@@ -1,34 +1,45 @@
 import React from "react";
 import Message from "./Message";
+import MessageDivider from "./MessageDivider";
 
-function MessageList() {
+function MessageList({ messages }) {
+  const dateTimeFormat = new Intl.DateTimeFormat(undefined, { dateStyle: "medium", timeStyle: "short" });
+  const dateFormat = new Intl.DateTimeFormat(undefined, { dateStyle: "long" });
+
+  let previousMessage;
+
   return (
-    <ol className="flex flex-col w-full">
-      <Message
-        text="Message 1"
-        authorName="insomniac"
-        authorAvatarUrl="https://firebasestorage.googleapis.com/v0/b/discord-clone-ea5ee.appspot.com/o/servers%2FEm4chCXPlrsemzfLlfsa%2F2022-08-03_10h34_29.png?alt=media"
-        timestamp="18.01.2023 21:54"
-      />
-      <Message
-        text="Message 2"
-        authorName="Other One"
-        authorAvatarUrl="https://firebasestorage.googleapis.com/v0/b/discord-clone-ea5ee.appspot.com/o/servers%2FEm4chCXPlrsemzfLlfsa%2F2022-08-03_10h34_29.png?alt=media"
-        timestamp="18.01.2023 21:57"
-      />
-      <Message
-        text="Message 2.1"
-        authorName="Other One"
-        authorAvatarUrl="https://firebasestorage.googleapis.com/v0/b/discord-clone-ea5ee.appspot.com/o/servers%2FEm4chCXPlrsemzfLlfsa%2F2022-08-03_10h34_29.png?alt=media"
-        timestamp="18.01.2023 21:57"
-        isFollowUp={true}
-      />
-      <Message
-        text="Message 3"
-        authorName="insomniac"
-        authorAvatarUrl="https://firebasestorage.googleapis.com/v0/b/discord-clone-ea5ee.appspot.com/o/servers%2FEm4chCXPlrsemzfLlfsa%2F2022-08-03_10h34_29.png?alt=media"
-        timestamp="18.01.2023 21:58"
-      />
+    <ol className="my-4 flex min-h-[calc(100%-2rem)] w-full flex-col justify-end">
+      {messages &&
+        messages.map((message) => {
+          let listItem = [];
+
+          if (message.timestamp.toDate().toDateString() !== previousMessage?.timestamp.toDate().toDateString()) {
+            listItem.push(
+              <MessageDivider key={message.timestamp.valueOf()}>
+                {dateFormat.format(message.timestamp.toDate())}
+              </MessageDivider>
+            );
+          }
+
+          const isFollowUp =
+            message.authorUid === previousMessage?.authorUid &&
+            message.timestamp.toMillis() - previousMessage?.timestamp.toMillis() < 60000;
+
+          listItem.push(
+            <Message
+              key={message.id}
+              text={message.text}
+              authorName={message.authorName || "Empty"}
+              authorAvatarUrl={message.authorAvatarUrl}
+              timestamp={dateTimeFormat.format(message.timestamp.toDate())}
+              isFollowUp={isFollowUp}
+            />
+          );
+
+          previousMessage = message;
+          return listItem;
+        })}
     </ol>
   );
 }
