@@ -22,10 +22,13 @@ module.exports = {
     },
   },
   rules: {
-    "react/prop-types": 0
+    "react/prop-types": 0,
   },
   env: {
-    "browser": true,
-    "node": true,
-  }
+    browser: true,
+    node: true,
+  },
+  parserOptions: {
+    ecmaVersion: 2020,
+  },
 };
