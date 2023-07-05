@@ -1,6 +1,7 @@
 export const LOGIN = "login";
 export const REGISTER = "register";
 export const NEWSERVER = "newserver";
+export const EDITPROFILE = "editprofile"
 export const CHANNEL_TEXT = "text";
 export const CHANNEL_VOICE = "voice";
 export const ROLE_ADMIN = "admin";
