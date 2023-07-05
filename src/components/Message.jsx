@@ -1,27 +1,13 @@
 import React from "react";
-import calculateColor from "../util/CalculateColor";
+import UserAvatar from "./UserAvatar";
 
 function Message({ authorName, authorAvatarUrl, text, timestamp, isFollowUp }) {
-  let avatarBackgroundStyle;
-  
-  if (authorAvatarUrl) {
-    avatarBackgroundStyle = {
-      backgroundImage: `url(${authorAvatarUrl})`,
-    };
-  } else {
-    const colors = calculateColor(authorName || "empty");
-    avatarBackgroundStyle = {
-      backgroundColor: colors.background,
-      color: colors.text,
-    };
-  }
-
   return (
-    <li className={"hover:bg-gray-800 relative px-4 w-full " + (isFollowUp ? "mt-0" : "mt-5")}>
+    <li className={"relative w-full px-4 hover:bg-gray-800 " + (isFollowUp ? "mt-0" : "mt-5")}>
       {isFollowUp || (
         <div>
-          <div className="flex items-center justify-center font-bold absolute mt-1 h-10 w-10 rounded-full bg-cover" style={avatarBackgroundStyle}>
-            {!authorAvatarUrl && authorName && authorName.charAt(0)}
+          <div className="absolute mt-1">
+            <UserAvatar avatarName={authorName} avatarUrl={authorAvatarUrl} />
           </div>
           <div className="flex items-baseline gap-2 pl-14">
             <h3 className="font-bold text-gray-100">{authorName}</h3>

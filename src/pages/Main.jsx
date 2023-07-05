@@ -6,7 +6,7 @@ import Modal from "../components/Modal";
 import NewServer from "../components/NewServer";
 import Sidebar from "../components/Sidebar";
 import ChannelHeader from "../components/ChannelHeader";
-import { NEWSERVER, MAX_MOBILE_WIDTH } from "../util/Constants";
+import { NEWSERVER, EDITPROFILE, MAX_MOBILE_WIDTH } from "../util/Constants";
 import useWindowDimensions from "../util/useWindowDimensions";
 import useUserServers from "../util/useUserServers";
 import useToggle from "../util/useToggle";
@@ -58,6 +58,7 @@ function Main() {
           onToggle={() => width < MAX_MOBILE_WIDTH && toggleSidebarVisible()}
           servers={servers}
           channels={channels}
+          onEditProfile={() => setOpenModal(EDITPROFILE)}
         />
         <div
           className={
@@ -76,6 +77,9 @@ function Main() {
         </div>
         <Modal open={openModal === NEWSERVER} dimBackdrop={true} locked={false} onClose={() => setOpenModal(null)}>
           <NewServer onClose={() => setOpenModal(null)} />
+        </Modal>
+        <Modal open={openModal === EDITPROFILE} dimBackdrop={true} locked={false} onClose={() => setOpenModal(null)}>
+          <div>Edit Profile</div>
         </Modal>
       </div>
     </AuthContext.Provider>
