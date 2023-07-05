@@ -13,6 +13,7 @@ import useToggle from "../util/useToggle";
 import AuthContext from "../util/AuthContext";
 import ChannelPlaceholder from "../components/ChannelPlaceholder";
 import ChannelContent from "../components/ChannelContent";
+import UserForm from "../components/UserForm";
 
 function Main() {
   const [user, loading, error] = useAuthState(auth);
@@ -79,7 +80,7 @@ function Main() {
           <NewServer onClose={() => setOpenModal(null)} />
         </Modal>
         <Modal open={openModal === EDITPROFILE} dimBackdrop={true} locked={false} onClose={() => setOpenModal(null)}>
-          <div>Edit Profile</div>
+          <UserForm isNew={false} currentEmail={user?.email} currentUsername={user?.displayName} onSubmit={() => setOpenModal(null)}/>
         </Modal>
       </div>
     </AuthContext.Provider>

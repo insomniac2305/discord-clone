@@ -1,7 +1,7 @@
 import React from "react";
 import { LOGIN, REGISTER } from "../util/Constants";
 import Login from "../components/Login";
-import Register from "../components/Register";
+import UserForm from "../components/UserForm";
 import AuthBackground from "../components/AuthBackground";
 import Modal from "../components/Modal";
 
@@ -16,7 +16,7 @@ function UserAuth({ mode }) {
           <Login />
         </Modal>
         <Modal open={mode === REGISTER} dimBackdrop={false} locked={true}>
-          <Register />
+          <UserForm isNew={true}/>
         </Modal>
       </div>
     </>
