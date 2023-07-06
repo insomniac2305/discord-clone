@@ -54,7 +54,7 @@ function Sidebar({ onNewServer, isVisible, servers, channels, onToggle, onEditPr
           onClick={() => navigate(`/app/${server.id}/${firstTextChannel.id}`)}
           active={serverId === server.id}
         >
-          <div className="flex h-full w-full items-center justify-center bg-cover font-bold" style={backgroundStyle}>
+          <div className="flex h-full w-full items-center justify-center bg-cover bg-center font-bold" style={backgroundStyle}>
             {!server.iconUrl && server.name.charAt(0)}
           </div>
         </SidebarItem>
