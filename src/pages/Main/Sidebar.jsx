@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import SidebarItem from "./SidebarItem";
-import { LogoNoText } from "./Logo";
+import { LogoNoText } from "../../components/Logo";
 import { HiOutlinePlus } from "react-icons/hi";
-import calculateColor from "../util/CalculateColor";
+import calculateColor from "../../util/CalculateColor";
 import ChannelItem from "./ChannelItem";
-import { CHANNEL_TEXT } from "../util/Constants";
+import { CHANNEL_TEXT } from "../../util/Constants";
 import CurrentUserInfo from "./CurrentUserInfo";
 
 function Sidebar({ onNewServer, isVisible, servers, channels, onToggle, onEditProfile }) {

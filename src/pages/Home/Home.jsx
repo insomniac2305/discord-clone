@@ -1,10 +1,10 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import { FaGithub, FaExternalLinkAlt } from "react-icons/fa";
-import Logo from "../components/Logo";
-import HomeBgMain from "../assets/home-bg-main.svg";
-import HomeBgLeft from "../assets/home-bg-left.svg";
-import HomeBgRight from "../assets/home-bg-right.svg";
+import Logo from "../../components/Logo";
+import HomeBgMain from "../../assets/home-bg-main.svg";
+import HomeBgLeft from "../../assets/home-bg-left.svg";
+import HomeBgRight from "../../assets/home-bg-right.svg";
 
 function Home() {
   return (

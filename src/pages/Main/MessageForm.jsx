@@ -1,12 +1,12 @@
 import React, { useContext, useRef, useState } from "react";
 import { BiSolidPlusCircle, BiSolidSmile } from "react-icons/bi";
 import { PiPaperPlaneRightFill } from "react-icons/pi";
-import useWindowDimensions from "../util/useWindowDimensions";
+import useWindowDimensions from "../../hooks/useWindowDimensions";
 import { Timestamp, addDoc, collection } from "firebase/firestore";
-import { db } from "../firebase";
-import AuthContext from "../util/AuthContext";
+import { db } from "../../firebase";
+import AuthContext from "../../util/AuthContext";
 
-function NewMessage({ channelName, channelId }) {
+function MessageForm({ channelName, channelId }) {
   const [message, setMessage] = useState("");
   const [error, setError] = useState(undefined);
   const messageTextRef = useRef(null);
@@ -98,4 +98,4 @@ function NewMessage({ channelName, channelId }) {
   );
 }
 
-export default NewMessage;
+export default MessageForm;

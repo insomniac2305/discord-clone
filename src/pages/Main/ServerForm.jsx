@@ -1,13 +1,13 @@
 import React, { useState } from "react";
-import TextInput from "./TextInput";
-import PrimaryButton from "./PrimaryButton";
-import IconPicker from "./IconPicker";
-import { auth, db, storage } from "../firebase";
+import TextInput from "../../components/TextInput";
+import PrimaryButton from "../../components/PrimaryButton";
+import IconPicker from "../../components/IconPicker";
+import { auth, db, storage } from "../../firebase";
 import { addDoc, collection, doc, setDoc, updateDoc } from "firebase/firestore";
 import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
-import { CHANNEL_TEXT, CHANNEL_VOICE, ROLE_ADMIN } from "../util/Constants";
+import { CHANNEL_TEXT, CHANNEL_VOICE, ROLE_ADMIN } from "../../util/Constants";
 
-function NewServer({ onClose }) {
+function ServerForm({ onClose }) {
   const [serverName, setServerName] = useState("");
   const [serverIcon, setServerIcon] = useState(null);
   const [loading, setLoading] = useState(false);
@@ -95,4 +95,4 @@ function NewServer({ onClose }) {
   );
 }
 
-export default NewServer;
+export default ServerForm;

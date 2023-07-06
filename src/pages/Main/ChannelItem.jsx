@@ -1,7 +1,7 @@
 import React from "react";
 import { FaHashtag } from "react-icons/fa";
 import { HiVolumeUp } from "react-icons/hi";
-import { CHANNEL_VOICE } from "../util/Constants";
+import { CHANNEL_VOICE } from "../../util/Constants";
 import { Link } from "react-router-dom";
 
 function ChannelItem({ type, name, linkTo, active, onClick }) {
