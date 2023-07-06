@@ -1,5 +1,5 @@
 import React from "react";
-import UserAvatar from "./UserAvatar";
+import UserAvatar from "../../components/UserAvatar";
 
 function Message({ authorName, authorAvatarUrl, text, timestamp, isFollowUp }) {
   return (

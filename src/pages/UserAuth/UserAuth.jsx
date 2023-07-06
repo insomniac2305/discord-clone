@@ -1,9 +1,9 @@
 import React from "react";
-import { LOGIN, REGISTER } from "../util/Constants";
-import Login from "../components/Login";
-import UserForm from "../components/UserForm";
-import AuthBackground from "../components/AuthBackground";
-import Modal from "../components/Modal";
+import { LOGIN, REGISTER } from "../../util/Constants";
+import Login from "./Login";
+import UserForm from "../../components/UserForm";
+import AuthBackground from "./AuthBackground";
+import Modal from "../../components/Modal";
 
 function UserAuth({ mode }) {
   return (

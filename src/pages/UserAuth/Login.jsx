@@ -1,11 +1,11 @@
-import Logo from "./Logo";
+import Logo from "../../components/Logo";
 import React, { useEffect, useState } from "react";
-import TextInput from "./TextInput";
-import LinkButton from "./LinkButton";
-import PrimaryButton from "./PrimaryButton";
+import TextInput from "../../components/TextInput";
+import LinkButton from "../../components/LinkButton";
+import PrimaryButton from "../../components/PrimaryButton";
 import { useNavigate } from "react-router-dom";
 import { useSignInWithEmailAndPassword } from "react-firebase-hooks/auth";
-import { auth } from "../firebase";
+import { auth } from "../../firebase";
 
 function Login() {
   const [email, setEmail] = useState("");

@@ -1,5 +1,5 @@
 import React from "react";
-import MainBg from "../assets/main-bg.svg";
+import MainBg from "../../assets/main-bg.svg";
 
 function ChannelPlaceholder() {
   return (

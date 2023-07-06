@@ -1,8 +1,8 @@
 import React, { useEffect, useRef } from "react";
 import ChannelMembers from "./ChannelMembers";
-import NewMessage from "./NewMessage";
+import MessageForm from "./MessageForm";
 import MessageList from "./MessageList";
-import useChannelMessages from "../util/useChannelMessages";
+import useChannelMessages from "../../hooks/useChannelMessages";
 
 function ChannelContent({ isMembersVisible, currentChannel }) {
   const messageContainerRef = useRef(null);
@@ -36,7 +36,7 @@ function ChannelContent({ isMembersVisible, currentChannel }) {
           {loading && <div>Loading ...</div>}
           {error && <div>Error: {error.message}</div>}
         </div>
-        <NewMessage channelName={currentChannel?.name} channelId={currentChannel?.id} />
+        <MessageForm channelName={currentChannel?.name} channelId={currentChannel?.id} />
       </div>
       <ChannelMembers isVisible={isMembersVisible} />
     </div>

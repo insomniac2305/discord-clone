@@ -1,19 +1,19 @@
-import { auth } from "../firebase";
+import { auth } from "../../firebase";
 import { useAuthState } from "react-firebase-hooks/auth";
 import React, { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import Modal from "../components/Modal";
-import NewServer from "../components/NewServer";
-import Sidebar from "../components/Sidebar";
-import ChannelHeader from "../components/ChannelHeader";
-import { NEWSERVER, EDITPROFILE, MAX_MOBILE_WIDTH } from "../util/Constants";
-import useWindowDimensions from "../util/useWindowDimensions";
-import useUserServers from "../util/useUserServers";
-import useToggle from "../util/useToggle";
-import AuthContext from "../util/AuthContext";
-import ChannelPlaceholder from "../components/ChannelPlaceholder";
-import ChannelContent from "../components/ChannelContent";
-import UserForm from "../components/UserForm";
+import Modal from "../../components/Modal";
+import ServerForm from "./ServerForm";
+import Sidebar from "./Sidebar";
+import ChannelHeader from "./ChannelHeader";
+import { NEWSERVER, EDITPROFILE, MAX_MOBILE_WIDTH } from "../../util/Constants";
+import useWindowDimensions from "../../hooks/useWindowDimensions";
+import useUserServers from "../../hooks/useUserServers";
+import useToggle from "../../hooks/useToggle";
+import AuthContext from "../../util/AuthContext";
+import ChannelPlaceholder from "./ChannelPlaceholder";
+import ChannelContent from "./ChannelContent";
+import UserForm from "../../components/UserForm";
 
 function Main() {
   const [user, loading, error] = useAuthState(auth);
@@ -77,7 +77,7 @@ function Main() {
           {!!serverId && <ChannelContent currentChannel={currentChannel} isMembersVisible={isMembersVisible} />}
         </div>
         <Modal open={openModal === NEWSERVER} dimBackdrop={true} locked={false} onClose={() => setOpenModal(null)}>
-          <NewServer onClose={() => setOpenModal(null)} />
+          <ServerForm onClose={() => setOpenModal(null)} />
         </Modal>
         <Modal open={openModal === EDITPROFILE} dimBackdrop={true} locked={false} onClose={() => setOpenModal(null)}>
           <UserForm isNew={false} currentEmail={user?.email} currentUsername={user?.displayName} onSubmit={() => setOpenModal(null)}/>
