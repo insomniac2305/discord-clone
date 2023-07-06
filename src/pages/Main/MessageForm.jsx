@@ -2,13 +2,12 @@ import React, { useContext, useRef, useState } from "react";
 import { BiSolidPlusCircle, BiSolidSmile } from "react-icons/bi";
 import { PiPaperPlaneRightFill } from "react-icons/pi";
 import useWindowDimensions from "../../hooks/useWindowDimensions";
-import { Timestamp, addDoc, collection } from "firebase/firestore";
-import { db } from "../../firebase";
 import AuthContext from "../../util/AuthContext";
+import useCreateMessage from "../../hooks/useCreateMessage";
 
 function MessageForm({ channelName, channelId }) {
   const [message, setMessage] = useState("");
-  const [error, setError] = useState(undefined);
+  const [createMessage, createError] = useCreateMessage();
   const messageTextRef = useRef(null);
   const { height } = useWindowDimensions();
   const user = useContext(AuthContext);
@@ -25,19 +24,7 @@ function MessageForm({ channelName, channelId }) {
   };
 
   const sendMessage = () => {
-    try {
-      addDoc(collection(db, "serverChannels/" + channelId + "/messages"), {
-        text: message,
-        timestamp: Timestamp.now(),
-        authorUid: user.uid,
-        authorName: user.displayName,
-        authorAvatarUrl: user.photoURL,
-      });
-    } catch (err) {
-      console.error(err);
-      setError(err);
-    }
-
+    createMessage(channelId, message, user.uid, user.displayName, user.photoURL);
     setMessage("");
     messageTextRef.current.value = "";
     resizeMessageTextArea();
@@ -71,8 +58,8 @@ function MessageForm({ channelName, channelId }) {
             id="new-message"
             placeholder={`Message to #${channelName}`}
             ref={messageTextRef}
-            value={error ? error : message}
-            readOnly={error}
+            value={createError ? createError : message}
+            readOnly={createError}
             rows={1}
             onChange={onMessageChange}
             onKeyDown={onKey}
