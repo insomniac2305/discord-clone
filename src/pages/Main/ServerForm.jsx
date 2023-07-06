@@ -2,66 +2,16 @@ import React, { useState } from "react";
 import TextInput from "../../components/TextInput";
 import PrimaryButton from "../../components/PrimaryButton";
 import IconPicker from "../../components/IconPicker";
-import { auth, db, storage } from "../../firebase";
-import { addDoc, collection, doc, setDoc, updateDoc } from "firebase/firestore";
-import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
-import { CHANNEL_TEXT, CHANNEL_VOICE, ROLE_ADMIN } from "../../util/Constants";
+import useCreateServer from "../../hooks/useCreateServer";
 
 function ServerForm({ onClose }) {
   const [serverName, setServerName] = useState("");
   const [serverIcon, setServerIcon] = useState(null);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState(null);
+  const [createServer, createLoading, createError] = useCreateServer(onClose);
 
   const onSubmit = async (e) => {
     e.preventDefault();
-
-    setLoading(true);
-
-    try {
-      const newServerRef = await addDoc(collection(db, "servers"), {
-        name: serverName,
-        iconUrl: null,
-      });
-
-      const serverChannelsCollection = collection(db, "serverChannels");
-
-      await addDoc(serverChannelsCollection, {
-        serverId: newServerRef.id,
-        name: "general",
-        type: CHANNEL_TEXT,
-      });
-
-      await addDoc(serverChannelsCollection, {
-        serverId: newServerRef.id,
-        name: "general",
-        type: CHANNEL_VOICE,
-      });
-
-      await setDoc(doc(db, "serverMembers", `${newServerRef.id}_${auth.currentUser.uid}`), {
-        userId: auth.currentUser.uid,
-        serverId: newServerRef.id,
-        role: ROLE_ADMIN,
-      });
-
-      if (serverIcon) {
-        const iconPath = `servers/${newServerRef.id}/${serverIcon.name}`;
-        const iconRef = ref(storage, iconPath);
-
-        await uploadBytes(iconRef, serverIcon);
-        const iconUrl = await getDownloadURL(iconRef);
-        await updateDoc(newServerRef, {
-          iconUrl: iconUrl,
-        });
-      }
-
-      onClose();
-    } catch (err) {
-      console.error(err);
-      setError(err);
-    }
-
-    setLoading(false);
+    await createServer(serverName, serverIcon);
   };
 
   return (
@@ -82,13 +32,13 @@ function ServerForm({ onClose }) {
         required={true}
         onChange={setServerName}
       />
-      {error && <p className="pb-2 text-sm text-red">There was an error: {error.message}</p>}
+      {createError && <p className="pb-2 text-sm text-red">There was an error: {createError.message}</p>}
       <div className="mt-4 flex w-full justify-between">
         <button onClick={onClose} type="button" className="text-sm font-medium hover:underline">
           Cancel
         </button>
         <div className="w-28">
-          <PrimaryButton text="Create" type="submit" loading={loading} />
+          <PrimaryButton text="Create" type="submit" loading={createLoading} />
         </div>
       </div>
     </form>
