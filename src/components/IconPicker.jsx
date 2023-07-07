@@ -1,10 +1,15 @@
 import React, { useEffect, useState } from "react";
 import ImageUploadIcon from "./ImageUploadIcon";
 
-function IconPicker({ onChange }) {
+function IconPicker({ onChange, initialIconUrl }) {
   const [iconSelection, setIconSelection] = useState(null);
-  const [iconUrl, setIconUrl] = useState(null);
+  const [iconUrl, setIconUrl] = useState(initialIconUrl);
+  const [isPlaceholderVisible, setIsPlaceholderVisible] = useState(true);
 
+  useEffect(() => {
+    setIsPlaceholderVisible(!iconSelection && !initialIconUrl);
+  }, [iconSelection, initialIconUrl]);
+  
   const onIconSelection = (e) => {
     if (!e.target.files || e.target.files.length === 0) {
       setIconSelection(null);
@@ -31,8 +36,8 @@ function IconPicker({ onChange }) {
 
   return (
     <div className="relative">
-      {!iconSelection && <ImageUploadIcon />}
-      {!iconSelection || <img src={iconUrl} alt="Picked Icon" className="h-20 w-20 rounded-full object-cover" />}
+      {isPlaceholderVisible && <ImageUploadIcon />}
+      {!isPlaceholderVisible && <img src={iconUrl} alt="Picked Icon" className="h-20 w-20 rounded-full object-cover" />}
       <input
         className="absolute left-0 top-0 h-full w-full opacity-0"
         type="file"

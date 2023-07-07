@@ -3,25 +3,20 @@ import Logo from "./Logo";
 import TextInput from "./TextInput";
 import LinkButton from "./LinkButton";
 import PrimaryButton from "./PrimaryButton";
+import IconPicker from "./IconPicker";
 import { useNavigate } from "react-router-dom";
 import { auth } from "../firebase";
-import {
-  useCreateUserWithEmailAndPassword,
-  useUpdateEmail,
-  useUpdatePassword,
-  useUpdateProfile,
-} from "react-firebase-hooks/auth";
+import { useCreateUserWithEmailAndPassword } from "react-firebase-hooks/auth";
+import useUpdateUser from "../hooks/useUpdateUser";
 
-function UserForm({ isNew, currentEmail, currentUsername, onSubmit }) {
+function UserForm({ isNew, currentEmail, currentUsername, currentAvatarUrl, onSubmit }) {
   const [email, setEmail] = useState(currentEmail || "");
   const [username, setUsername] = useState(currentUsername || "");
   const [password, setPassword] = useState("");
+  const [avatar, setAvatar] = useState(currentAvatarUrl);
   const navigate = useNavigate();
-  const [createUserWithEmailAndPassword, createdUser, createLoading, createError] =
-    useCreateUserWithEmailAndPassword(auth);
-  const [updateEmail, emailUpdating, emailError] = useUpdateEmail(auth);
-  const [updateProfile, profileUpdating, profileError] = useUpdateProfile(auth);
-  const [updatePassword, passwordUpdating, passwordError] = useUpdatePassword(auth);
+  const [createUser, createdUser, createLoading, createError] = useCreateUserWithEmailAndPassword(auth);
+  const [updateUser, updateLoading, updateError] = useUpdateUser(onSubmit);
 
   useEffect(() => {
     if (createLoading) {
@@ -37,49 +32,30 @@ function UserForm({ isNew, currentEmail, currentUsername, onSubmit }) {
 
   const register = async (e) => {
     e.preventDefault();
-    try {
-      const createResponse = await createUserWithEmailAndPassword(email, password);
-      const newUser = createResponse.user;
-      await newUser.updateProfile({ displayName: username });
-    } catch (err) {
-      console.error(err);
-    }
+    await createUser(email, password);
+    await updateUser({ username: username });
   };
 
-  const getError = () => {
-    return [createError, emailError, profileError, passwordError].find((error) => error !== undefined);
-  };
-
-  const updateUser = async (e) => {
+  const update = async (e) => {
     e.preventDefault();
-    let isUpdateSuccessful = true;
-    try {
-      if (email !== currentEmail) {
-        isUpdateSuccessful = await updateEmail(email);
-      }
-      if (username !== currentUsername) {
-        isUpdateSuccessful = await updateProfile({
-          displayName: username,
-        });
-      }
-      if (password !== "") {
-        isUpdateSuccessful = await updatePassword(password);
-      }
-    } catch (err) {
-      console.error(err);
-    }
-    isUpdateSuccessful && onSubmit();
+    updateUser({
+      email: email !== currentEmail ? email : null,
+      username: username !== currentUsername ? username : null,
+      password: password !== "" ? password : null,
+      avatarFile: avatar !== currentAvatarUrl ? avatar : null,
+    });
   };
 
   return (
     <>
       <form
         action="#"
-        onSubmit={isNew ? register : updateUser}
+        onSubmit={isNew ? register : update}
         className="flex h-full w-full flex-col items-center gap-5 bg-gray-800 px-4 py-6 text-gray-300 sm:h-auto sm:w-[30rem] sm:shadow-md"
       >
         {isNew && <Logo />}
         <h1 className="text-xl font-bold tracking-wide">{isNew ? "Create new account" : "Edit your profile"}</h1>
+        {!isNew && <IconPicker onChange={setAvatar} initialIconUrl={currentAvatarUrl} />}
         <TextInput
           label="E-Mail"
           type="email"
@@ -105,12 +81,10 @@ function UserForm({ isNew, currentEmail, currentUsername, onSubmit }) {
           required={isNew}
         />
         <div className="w-full">
-          {getError() && <p className="pb-2 text-sm text-red">There was an error: {getError().message}</p>}
-          <PrimaryButton
-            text={isNew ? "Continue" : "Save"}
-            loading={createLoading || emailUpdating || profileUpdating || passwordUpdating}
-            type={"submit"}
-          />
+          {(createError || updateError) && (
+            <p className="pb-2 text-sm text-red">There was an error: {createError?.message || updateError?.message}</p>
+          )}
+          <PrimaryButton text={isNew ? "Continue" : "Save"} loading={createLoading || updateLoading} type={"submit"} />
           {isNew && (
             <p className="mt-2 w-full text-left text-xs tracking-wide text-gray-500">
               <LinkButton text="Already have an account?" onClick={() => navigate("/login")} />
