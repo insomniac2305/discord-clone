@@ -80,7 +80,7 @@ function Main() {
           <ServerForm onClose={() => setOpenModal(null)} />
         </Modal>
         <Modal open={openModal === EDITPROFILE} dimBackdrop={true} locked={false} onClose={() => setOpenModal(null)}>
-          <UserForm isNew={false} currentEmail={user?.email} currentUsername={user?.displayName} onSubmit={() => setOpenModal(null)}/>
+          <UserForm isNew={false} currentEmail={user?.email} currentUsername={user?.displayName} currentAvatarUrl={user?.photoURL} onSubmit={() => setOpenModal(null)}/>
         </Modal>
       </div>
     </AuthContext.Provider>

@@ -18,7 +18,7 @@ function UserAvatar({ avatarName, avatarUrl }) {
 
   return (
     <div
-      className="flex h-10 w-10 items-center justify-center rounded-full bg-cover font-bold"
+      className="flex h-10 w-10 items-center justify-center rounded-full bg-cover bg-center font-bold"
       style={avatarBackgroundStyle}
     >
       {!avatarUrl && avatarName && avatarName.charAt(0).toUpperCase()}
