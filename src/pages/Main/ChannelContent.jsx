@@ -38,7 +38,7 @@ function ChannelContent({ isMembersVisible, currentChannel }) {
         </div>
         <MessageForm channelName={currentChannel?.name} channelId={currentChannel?.id} />
       </div>
-      <ChannelMembers isVisible={isMembersVisible} />
+      <ChannelMembers isVisible={isMembersVisible} serverId={currentChannel?.serverId} />
     </div>
   );
 }

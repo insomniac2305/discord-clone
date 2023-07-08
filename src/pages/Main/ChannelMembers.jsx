@@ -1,6 +1,12 @@
 import React from "react";
+import useServerMembers from "../../hooks/useServerMembers";
+import User from "../../components/User";
+import { ROLE_ADMIN } from "../../util/Constants";
+import { FaCrown } from "react-icons/fa";
 
-function ChannelMembers({ isVisible }) {
+function ChannelMembers({ isVisible, serverId }) {
+  const [serverMembers] = useServerMembers(serverId);
+
   return (
     <div
       className={
@@ -8,10 +14,15 @@ function ChannelMembers({ isVisible }) {
         (isVisible ? "translate-x-0" : "translate-x-[15rem]")
       }
     >
-      <ul>
-        <li>Member 1</li>
-        <li>Member 2</li>
-        <li>Member 3</li>
+      <ul className="mx-2 my-4">
+        {serverMembers?.map((member) => {
+          return (
+            <li className="flex items-center rounded p-1 hover:bg-gray-680 gap-2" key={member.id}>
+              <User username={member.name} avatarUrl={member.photoUrl} />
+              {member.role === ROLE_ADMIN && <FaCrown className="text-sm text-[#f0b132]" />}
+            </li>
+          );
+        })}
       </ul>
     </div>
   );
