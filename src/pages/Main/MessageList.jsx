@@ -23,15 +23,15 @@ function MessageList({ messages }) {
           }
 
           const isFollowUp =
-            message.authorUid === previousMessage?.authorUid &&
+            message.userId === previousMessage?.userId &&
             message.timestamp.toMillis() - previousMessage?.timestamp.toMillis() < 60000;
 
           listItem.push(
             <Message
               key={message.id}
               text={message.text}
-              authorName={message.authorName || "Empty"}
-              authorAvatarUrl={message.authorAvatarUrl}
+              username={message.username || "Empty"}
+              avatarUrl={message.avatarUrl}
               timestamp={dateTimeFormat.format(message.timestamp.toDate())}
               isFollowUp={isFollowUp}
             />

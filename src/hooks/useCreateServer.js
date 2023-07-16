@@ -35,6 +35,8 @@ function useCreateServer(onSuccess) {
         userId: auth.currentUser.uid,
         serverId: newServerRef.id,
         role: ROLE_ADMIN,
+        username: auth.currentUser.displayName,
+        avatarUrl: auth.currentUser.photoURL,
       });
 
       if (serverIcon) {
@@ -47,13 +49,13 @@ function useCreateServer(onSuccess) {
           iconUrl: iconUrl,
         });
       }
+      onSuccess();
     } catch (err) {
       console.error(err);
       setError(err);
     }
 
     setLoading(false);
-    onSuccess();
   };
 
   return [createServer, loading, error];

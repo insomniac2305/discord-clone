@@ -1,16 +1,16 @@
 import React from "react";
 import UserAvatar from "../../components/UserAvatar";
 
-function Message({ authorName, authorAvatarUrl, text, timestamp, isFollowUp }) {
+function Message({ username, avatarUrl, text, timestamp, isFollowUp }) {
   return (
     <li className={"relative w-full px-4 hover:bg-gray-800 " + (isFollowUp ? "mt-0" : "mt-5")}>
       {isFollowUp || (
         <div>
           <div className="absolute mt-1">
-            <UserAvatar avatarName={authorName} avatarUrl={authorAvatarUrl} />
+            <UserAvatar avatarName={username} avatarUrl={avatarUrl} />
           </div>
           <div className="flex items-baseline gap-2 pl-14">
-            <h3 className="font-bold text-gray-100">{authorName}</h3>
+            <h3 className="font-bold text-gray-100">{username}</h3>
             <time className="text-xs text-gray-600">{timestamp}</time>
           </div>
         </div>

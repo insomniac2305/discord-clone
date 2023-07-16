@@ -5,14 +5,14 @@ import { useState } from "react";
 function useCreateMessage() {
   const [error, setError] = useState(undefined);
 
-  const createMessage = async (channelId, text, authorUid, authorName, authorAvatarUrl) => {
+  const createMessage = async (channelId, text, userId, username, avatarUrl) => {
     try {
       await addDoc(collection(db, "serverChannels/" + channelId + "/messages"), {
         text: text,
         timestamp: Timestamp.now(),
-        authorUid: authorUid,
-        authorName: authorName,
-        authorAvatarUrl: authorAvatarUrl,
+        userId: userId,
+        username: username,
+        avatarUrl: avatarUrl,
       });
     } catch (err) {
       console.error(err);

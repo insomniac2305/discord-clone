@@ -18,7 +18,7 @@ function ChannelMembers({ isVisible, serverId }) {
         {serverMembers?.map((member) => {
           return (
             <li className="flex items-center rounded p-1 hover:bg-gray-680 gap-2" key={member.id}>
-              <User username={member.name} avatarUrl={member.photoUrl} />
+              <User username={member.username} avatarUrl={member.avatarUrl} />
               {member.role === ROLE_ADMIN && <FaCrown className="text-sm text-[#f0b132]" />}
             </li>
           );

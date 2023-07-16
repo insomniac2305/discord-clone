@@ -1,6 +1,6 @@
 import { auth, db, storage } from "../firebase";
 import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
-import { collectionGroup, getDocs, query, updateDoc, where } from "firebase/firestore";
+import { collection, collectionGroup, getDocs, query, updateDoc, where } from "firebase/firestore";
 import { useState } from "react";
 import { updateEmail, updatePassword, updateProfile } from "firebase/auth";
 
@@ -8,23 +8,23 @@ function useUpdateUser(onSuccess) {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
 
-  const updateMessagesAuthor = async (name, avatarUrl) => {
+  const updateUserReferences = async (referenceCollection, username, avatarUrl) => {
     let updateObject = {};
-    if (name) {
+    if (username) {
       updateObject = {
-        authorName: name,
+        username: username,
       };
     }
     if (avatarUrl) {
       updateObject = {
-        authorAvatarUrl: avatarUrl,
+        avatarUrl: avatarUrl,
         ...updateObject,
       };
     }
 
-    const messages = query(collectionGroup(db, "messages"), where("authorUid", "==", auth.currentUser.uid));
-    const messagesSnapshot = await getDocs(messages);
-    messagesSnapshot.forEach((doc) => {
+    const references = query(referenceCollection, where("userId", "==", auth.currentUser.uid));
+    const referencesSnapshot = await getDocs(references);
+    referencesSnapshot.forEach((doc) => {
       updateDoc(doc.ref, updateObject);
     });
   };
@@ -54,7 +54,8 @@ function useUpdateUser(onSuccess) {
             photoURL: avatarUrl,
           });
         }
-        await updateMessagesAuthor(username, avatarUrl);
+        await updateUserReferences(collectionGroup(db, "messages"), username, avatarUrl);
+        await updateUserReferences(collection(db, "serverMembers"), username, avatarUrl);
       }
 
       if (password) {
