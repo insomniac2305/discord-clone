@@ -14,6 +14,7 @@ import AuthContext from "../../util/AuthContext";
 import ChannelPlaceholder from "./ChannelPlaceholder";
 import ChannelContent from "./ChannelContent";
 import UserForm from "../../components/UserForm";
+import { signOut } from "firebase/auth";
 
 function Main() {
   const [user, loading, error] = useAuthState(auth);
@@ -60,6 +61,7 @@ function Main() {
           servers={servers}
           channels={channels}
           onEditProfile={() => setOpenModal(EDITPROFILE)}
+          onSignOut={() => signOut(auth)}
         />
         <div
           className={
@@ -80,7 +82,13 @@ function Main() {
           <ServerForm onClose={() => setOpenModal(null)} />
         </Modal>
         <Modal open={openModal === EDITPROFILE} dimBackdrop={true} locked={false} onClose={() => setOpenModal(null)}>
-          <UserForm isNew={false} currentEmail={user?.email} currentUsername={user?.displayName} currentAvatarUrl={user?.photoURL} onSubmit={() => setOpenModal(null)}/>
+          <UserForm
+            isNew={false}
+            currentEmail={user?.email}
+            currentUsername={user?.displayName}
+            currentAvatarUrl={user?.photoURL}
+            onSubmit={() => setOpenModal(null)}
+          />
         </Modal>
       </div>
     </AuthContext.Provider>

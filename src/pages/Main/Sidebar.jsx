@@ -8,7 +8,7 @@ import ChannelItem from "./ChannelItem";
 import { CHANNEL_TEXT } from "../../util/Constants";
 import CurrentUserInfo from "./CurrentUserInfo";
 
-function Sidebar({ onNewServer, isVisible, servers, channels, onToggle, onEditProfile }) {
+function Sidebar({ onNewServer, isVisible, servers, channels, onToggle, onEditProfile, onSignOut }) {
   const navigate = useNavigate();
   let { serverId, channelId } = useParams();
   const [heading, setHeading] = useState("");
@@ -82,7 +82,7 @@ function Sidebar({ onNewServer, isVisible, servers, channels, onToggle, onEditPr
 
   return (
     <div className={"flex w-fit transition-all " + (isVisible ? "-translate-x-[0rem]" : "-translate-x-[20rem]")}>
-      <nav className="flex min-w-[4.5rem] flex-col items-center gap-2 bg-gray-900 py-3">
+      <nav className="flex w-[4.5rem] flex-col items-center gap-2 bg-gray-900 py-3">
         <SidebarItem popupText="Home" onClick={() => navigate("/app")} active={!serverId}>
           <div
             className={
@@ -103,12 +103,12 @@ function Sidebar({ onNewServer, isVisible, servers, channels, onToggle, onEditPr
           </div>
         </SidebarItem>
       </nav>
-      <div className="flex min-w-[15.5rem] flex-col bg-gray-800  text-gray-600">
+      <div className="flex w-[15.5rem] flex-col bg-gray-800  text-gray-600">
         <div className="flex h-12 items-center px-4 shadow shadow-black">
           <h1 className="font-bold text-gray-100">{heading}</h1>
         </div>
         <ul className="flex flex-1 flex-col px-2 py-4 font-medium">{channelList}</ul>
-        <CurrentUserInfo onClick={onEditProfile}/>
+        <CurrentUserInfo onEditProfile={onEditProfile} onSignOut={onSignOut}/>
       </div>
     </div>
   );
