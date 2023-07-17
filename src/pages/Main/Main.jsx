@@ -1,11 +1,11 @@
 import { auth } from "../../firebase";
 import React, { useContext, useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import Modal from "../../components/Modal";
 import ServerForm from "./ServerForm";
 import Sidebar from "./Sidebar";
 import ChannelHeader from "./ChannelHeader";
-import { NEWSERVER, EDITPROFILE, MAX_MOBILE_WIDTH } from "../../util/Constants";
+import { NEWSERVER, EDITPROFILE, MAX_MOBILE_WIDTH, CHANNEL_TEXT } from "../../util/Constants";
 import useWindowDimensions from "../../hooks/useWindowDimensions";
 import useUserServers from "../../hooks/useUserServers";
 import useToggle from "../../hooks/useToggle";
@@ -16,6 +16,7 @@ import { signOut } from "firebase/auth";
 import AuthContext from "../../util/AuthContext";
 
 function Main() {
+  const navigate = useNavigate();
   const [openModal, setOpenModal] = useState(null);
   const [isSidebarVisible, toggleSidebarVisible] = useToggle(true);
   const [isMembersVisible, toggleMembersVisible] = useToggle(false);
@@ -35,10 +36,15 @@ function Main() {
     if (channels && channelId) {
       const channelFromList = channels.find((channel) => channel.id === channelId);
       setCurrentChannel({ ...channelFromList });
+    } else if (channels && !channelId) {
+      const firstTextChannel = channels.find(
+        (channel) => channel.serverId === serverId && channel.type === CHANNEL_TEXT
+      );
+      firstTextChannel && navigate(`/app/${serverId}/${firstTextChannel.id}`);
     } else {
       setCurrentChannel(null);
     }
-  }, [channels, channelId]);
+  }, [serverId, channels, channelId]);
 
   return (
     <div className="flex h-full w-fit overflow-hidden lg:w-full">

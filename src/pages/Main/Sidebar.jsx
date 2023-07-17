@@ -5,7 +5,6 @@ import { LogoNoText } from "../../components/Logo";
 import { HiOutlinePlus } from "react-icons/hi";
 import calculateColor from "../../util/CalculateColor";
 import ChannelItem from "./ChannelItem";
-import { CHANNEL_TEXT } from "../../util/Constants";
 import CurrentUserInfo from "./CurrentUserInfo";
 
 function Sidebar({ onNewServer, isVisible, servers, channels, onToggle, onEditProfile, onSignOut }) {
@@ -42,19 +41,18 @@ function Sidebar({ onNewServer, isVisible, servers, channels, onToggle, onEditPr
           color: colors.text,
         };
       }
-      let firstTextChannel;
-      if (channels) {
-        firstTextChannel = channels.find((channel) => channel.serverId === server.id && channel.type === CHANNEL_TEXT);
-      }
 
       return (
         <SidebarItem
           key={server.id}
           popupText={server.name}
-          onClick={() => navigate(`/app/${server.id}/${firstTextChannel.id}`)}
+          onClick={() => navigate(`/app/${server.id}`)}
           active={serverId === server.id}
         >
-          <div className="flex h-full w-full items-center justify-center bg-cover bg-center font-bold" style={backgroundStyle}>
+          <div
+            className="flex h-full w-full items-center justify-center bg-cover bg-center font-bold"
+            style={backgroundStyle}
+          >
             {!server.iconUrl && server.name.charAt(0)}
           </div>
         </SidebarItem>
@@ -108,7 +106,7 @@ function Sidebar({ onNewServer, isVisible, servers, channels, onToggle, onEditPr
           <h1 className="font-bold text-gray-100">{heading}</h1>
         </div>
         <ul className="flex flex-1 flex-col px-2 py-4 font-medium">{channelList}</ul>
-        <CurrentUserInfo onEditProfile={onEditProfile} onSignOut={onSignOut}/>
+        <CurrentUserInfo onEditProfile={onEditProfile} onSignOut={onSignOut} />
       </div>
     </div>
   );

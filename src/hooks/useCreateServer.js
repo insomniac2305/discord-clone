@@ -1,12 +1,14 @@
-import { addDoc, collection, doc, setDoc, updateDoc } from "firebase/firestore";
+import { addDoc, collection, updateDoc } from "firebase/firestore";
 import { auth, db, storage } from "../firebase";
 import { CHANNEL_TEXT, CHANNEL_VOICE, ROLE_ADMIN } from "../util/Constants";
 import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
 import { useState } from "react";
+import useAddServerMember from "./useAddServerMember";
 
 function useCreateServer(onSuccess) {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
+  const [addServerMember] = useAddServerMember();
 
   const createServer = async (serverName, serverIcon) => {
     setLoading(true);
@@ -31,13 +33,13 @@ function useCreateServer(onSuccess) {
         type: CHANNEL_VOICE,
       });
 
-      await setDoc(doc(db, "serverMembers", `${newServerRef.id}_${auth.currentUser.uid}`), {
-        userId: auth.currentUser.uid,
-        serverId: newServerRef.id,
-        role: ROLE_ADMIN,
-        username: auth.currentUser.displayName,
-        avatarUrl: auth.currentUser.photoURL,
-      });
+      await addServerMember(
+        auth.currentUser.uid,
+        newServerRef.id,
+        ROLE_ADMIN,
+        auth.currentUser.displayName,
+        auth.currentUser.photoURL
+      );
 
       if (serverIcon) {
         const iconPath = `servers/${newServerRef.id}/${serverIcon.name}`;
