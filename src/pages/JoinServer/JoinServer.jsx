@@ -3,7 +3,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import useAddServerMember from "../../hooks/useAddServerMember";
 import AuthContext from "../../util/AuthContext";
 import { ROLE_MEMBER } from "../../util/Constants";
-import { CgSpinnerAlt } from "react-icons/cg";
+import LoadingScreen from "../../components/LoadingScreen";
 
 function JoinServer() {
   const navigate = useNavigate();
@@ -24,12 +24,7 @@ function JoinServer() {
     addCurrentUserToServer();
   }, []);
 
-  return (
-    <div className="flex h-full w-full items-center justify-center bg-gray-700 text-gray-100">
-      {loading && <CgSpinnerAlt className="text-3xl" />}
-      {error && <p className="text-red">There was an error: {error.message}</p>}
-    </div>
-  );
+  return <LoadingScreen loading={loading} error={error} />;
 }
 
 export default JoinServer;
