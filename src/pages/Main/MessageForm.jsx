@@ -10,7 +10,7 @@ function MessageForm({ channelName, channelId }) {
   const [createMessage, createError] = useCreateMessage();
   const messageTextRef = useRef(null);
   const { height } = useWindowDimensions();
-  const user = useContext(AuthContext);
+  const [user] = useContext(AuthContext);
 
   const resizeMessageTextArea = () => {
     messageTextRef.current.style.height = "auto";

@@ -4,7 +4,7 @@ import User from "../../components/User";
 import { MdLogout } from "react-icons/md";
 
 function CurrentUserInfo({ onEditProfile, onSignOut }) {
-  const user = useContext(AuthContext);
+  const [user] = useContext(AuthContext);
 
   return (
     <div className="flex justify-between bg-gray-850 p-1">

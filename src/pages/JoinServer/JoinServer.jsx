@@ -8,7 +8,7 @@ import LoadingScreen from "../../components/LoadingScreen";
 function JoinServer() {
   const navigate = useNavigate();
   const { serverId } = useParams();
-  const user = useContext(AuthContext);
+  const [user] = useContext(AuthContext);
   const [addServerMember, loading, error] = useAddServerMember();
 
   useEffect(() => {

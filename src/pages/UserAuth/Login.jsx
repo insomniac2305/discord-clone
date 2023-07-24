@@ -1,27 +1,25 @@
 import Logo from "../../components/Logo";
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import TextInput from "../../components/TextInput";
 import LinkButton from "../../components/LinkButton";
 import PrimaryButton from "../../components/PrimaryButton";
 import { useNavigate } from "react-router-dom";
 import { useSignInWithEmailAndPassword } from "react-firebase-hooks/auth";
 import { auth } from "../../firebase";
+import AuthContext from "../../util/AuthContext";
 
 function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
-
-  const [signInWithEmailAndPassword, user, loading, error] = useSignInWithEmailAndPassword(auth);
+  const [signInWithEmailAndPassword, signInUser, signInLoading, signInError] = useSignInWithEmailAndPassword(auth);
+  const [currentUser, currentUserLoading] = useContext(AuthContext);
 
   useEffect(() => {
-    if (loading) {
-      return;
-    }
-    if (user) {
+    if ((signInUser || currentUser) && !signInLoading && !currentUserLoading) {
       navigate("/app");
     }
-  }, [user, loading, navigate]);
+  }, [signInUser, signInLoading, currentUser, currentUserLoading, navigate]);
 
   const login = (e) => {
     e.preventDefault();
@@ -53,8 +51,8 @@ function Login() {
           </p>
         </div>
         <div className="w-full">
-          {error && <p className="pb-2 text-sm text-red">There was an error: {error.message}</p>}
-          <PrimaryButton text="Sign in" type="submit" loading={loading} />
+          {signInError && <p className="pb-2 text-sm text-red">There was an error: {signInError.message}</p>}
+          <PrimaryButton text="Sign in" type="submit" loading={signInLoading || currentUserLoading} />
           <p className="mt-2 w-full text-left text-xs tracking-wide text-gray-500">
             Need an account? <LinkButton text="Register" onClick={() => navigate("/register")} />
           </p>

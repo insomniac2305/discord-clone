@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import Logo from "./Logo";
 import TextInput from "./TextInput";
 import LinkButton from "./LinkButton";
@@ -8,6 +8,7 @@ import { useNavigate } from "react-router-dom";
 import { auth } from "../firebase";
 import { useCreateUserWithEmailAndPassword } from "react-firebase-hooks/auth";
 import useUpdateUser from "../hooks/useUpdateUser";
+import AuthContext from "../util/AuthContext";
 
 function UserForm({ isNew, currentEmail, currentUsername, currentAvatarUrl, onSubmit }) {
   const [email, setEmail] = useState(currentEmail || "");
@@ -17,18 +18,13 @@ function UserForm({ isNew, currentEmail, currentUsername, currentAvatarUrl, onSu
   const navigate = useNavigate();
   const [createUser, createdUser, createLoading, createError] = useCreateUserWithEmailAndPassword(auth);
   const [updateUser, updateLoading, updateError] = useUpdateUser(onSubmit);
+  const [currentUser, currentUserLoading] = useContext(AuthContext);
 
   useEffect(() => {
-    if (createLoading) {
-      return;
-    }
-    if (createdUser) {
+    if ((createdUser || currentUser) && !createLoading && !currentUserLoading) {
       navigate("/app");
     }
-    if (createError) {
-      console.error(createError);
-    }
-  }, [createdUser, createLoading, createError, navigate]);
+  }, [createdUser, createLoading, currentUser, currentUserLoading, navigate]);
 
   const register = async (e) => {
     e.preventDefault();
@@ -84,7 +80,7 @@ function UserForm({ isNew, currentEmail, currentUsername, currentAvatarUrl, onSu
           {(createError || updateError) && (
             <p className="pb-2 text-sm text-red">There was an error: {createError?.message || updateError?.message}</p>
           )}
-          <PrimaryButton text={isNew ? "Continue" : "Save"} loading={createLoading || updateLoading} type={"submit"} />
+          <PrimaryButton text={isNew ? "Continue" : "Save"} loading={createLoading || updateLoading || currentUserLoading} type={"submit"} />
           {isNew && (
             <p className="mt-2 w-full text-left text-xs tracking-wide text-gray-500">
               <LinkButton text="Already have an account?" onClick={() => navigate("/login")} />
