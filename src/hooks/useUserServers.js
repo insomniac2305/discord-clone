@@ -33,7 +33,12 @@ function useUserServers(userId) {
   }, [userId]);
 
   useEffect(() => {
-    if (!memberships || memberships.length === 0) {
+    if (!memberships) {
+      setServers(undefined);
+      return;
+    }
+
+    if (memberships.length === 0) {
       setServers([]);
       return;
     }
@@ -50,7 +55,6 @@ function useUserServers(userId) {
         setError(snapshotError);
       }
     );
-    
 
     const unsubscribeChannels = onSnapshot(
       query(collection(db, "serverChannels"), where("serverId", "in", memberships)),
@@ -70,7 +74,6 @@ function useUserServers(userId) {
       unsubscribeChannels();
     };
   }, [memberships]);
-  
 
   useEffect(() => {
     if ((!memberships || !servers) && !error) {
