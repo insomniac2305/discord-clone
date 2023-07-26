@@ -5,7 +5,7 @@ import Modal from "../../components/Modal";
 import ServerForm from "./ServerForm";
 import Sidebar from "./Sidebar";
 import ChannelHeader from "./ChannelHeader";
-import { NEWSERVER, EDITPROFILE, MAX_MOBILE_WIDTH, CHANNEL_TEXT } from "../../util/Constants";
+import { NEWSERVER, EDITPROFILE, MAX_MOBILE_WIDTH, CHANNEL_TEXT, EDITSERVER } from "../../util/Constants";
 import useWindowDimensions from "../../hooks/useWindowDimensions";
 import useUserServers from "../../hooks/useUserServers";
 import useToggle from "../../hooks/useToggle";
@@ -26,6 +26,7 @@ function Main() {
   const [servers, channels, serversLoading] = useUserServers(user?.uid);
   let { serverId, channelId } = useParams();
   const [currentChannel, setCurrentChannel] = useState(null);
+  const [currentServer, setCurrentServer] = useState(null);
 
   useEffect(() => {
     if (!user && !userLoading) {
@@ -38,6 +39,13 @@ function Main() {
       toggleSidebarVisible();
     }
   }, [width]);
+
+  useEffect(() => {
+    if (serverId && servers) {
+      const serverFromList = servers.find((server) => server.id === serverId);
+      setCurrentServer({ ...serverFromList });
+    }
+  }, [serverId, servers]);
 
   useEffect(() => {
     if (channels && channelId) {
@@ -59,11 +67,13 @@ function Main() {
     return (
       <div className="flex h-full w-fit overflow-hidden lg:w-full">
         <Sidebar
-          onNewServer={() => setOpenModal(NEWSERVER)}
           isVisible={isSidebarVisible}
-          onToggle={() => width < MAX_MOBILE_WIDTH && toggleSidebarVisible()}
           servers={servers}
           channels={channels}
+          currentServer={currentServer}
+          onToggle={() => width < MAX_MOBILE_WIDTH && toggleSidebarVisible()}
+          onNewServer={() => setOpenModal(NEWSERVER)}
+          onEditServer={() => setOpenModal(EDITSERVER)}
           onEditProfile={() => setOpenModal(EDITPROFILE)}
           onSignOut={() => signOut(auth)}
         />
@@ -83,7 +93,16 @@ function Main() {
           {!!serverId && <ChannelContent currentChannel={currentChannel} isMembersVisible={isMembersVisible} />}
         </div>
         <Modal open={openModal === NEWSERVER} dimBackdrop={true} locked={false} onClose={() => setOpenModal(null)}>
-          <ServerForm onClose={() => setOpenModal(null)} />
+          <ServerForm onClose={() => setOpenModal(null)} isNew={true} />
+        </Modal>
+        <Modal open={openModal === EDITSERVER} dimBackdrop={true} locked={false} onClose={() => setOpenModal(null)}>
+          <ServerForm
+            onClose={() => setOpenModal(null)}
+            isNew={false}
+            serverId={currentServer?.id}
+            currentName={currentServer?.name}
+            currentIconUrl={currentServer?.iconUrl}
+          />
         </Modal>
         <Modal open={openModal === EDITPROFILE} dimBackdrop={true} locked={false} onClose={() => setOpenModal(null)}>
           <UserForm

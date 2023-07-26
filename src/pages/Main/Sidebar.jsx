@@ -8,7 +8,17 @@ import ChannelItem from "./ChannelItem";
 import CurrentUserInfo from "./CurrentUserInfo";
 import PopupMenu from "../../components/PopupMenu";
 
-function Sidebar({ onNewServer, isVisible, servers, channels, onToggle, onEditProfile, onSignOut }) {
+function Sidebar({
+  onNewServer,
+  isVisible,
+  servers,
+  channels,
+  onToggle,
+  onEditProfile,
+  onSignOut,
+  onEditServer,
+  currentServer,
+}) {
   const navigate = useNavigate();
   let { serverId, channelId } = useParams();
   const [heading, setHeading] = useState("");
@@ -17,16 +27,15 @@ function Sidebar({ onNewServer, isVisible, servers, channels, onToggle, onEditPr
 
   useEffect(() => {
     if (serverId) {
-      if (servers) {
-        const currentServer = servers.find((server) => server.id === serverId);
-        currentServer && setHeading(currentServer.name);
+      if (currentServer) {
+        setHeading(currentServer.name);
       } else {
         setHeading("");
       }
     } else {
       setHeading("Friends");
     }
-  });
+  }, [serverId, currentServer]);
 
   let serverList;
 
@@ -108,48 +117,51 @@ function Sidebar({ onNewServer, isVisible, servers, channels, onToggle, onEditPr
         </SidebarItem>
       </nav>
       <div className="flex w-[15.5rem] flex-col bg-gray-800  text-gray-600">
-        <button
-          ref={btnRef}
-          className={
-            "relative flex h-12 items-center px-4 text-start shadow shadow-black " +
-            (serverId ? "hover:bg-gray-680 focus:bg-gray-680" : "hover:cursor-default")
-          }
-        >
-          <h1 className="flex-1 font-bold text-gray-100">{heading}</h1>
+        <div className="relative h-12 shadow shadow-black">
+          <button
+            ref={btnRef}
+            className={
+              "flex h-full w-full items-center px-4 text-start " +
+              (serverId ? "hover:bg-gray-680 focus:bg-gray-680" : "hover:cursor-default")
+            }
+          >
+            <h1 className="flex-1 font-bold text-gray-100">{heading}</h1>
+            {!!serverId && <HiChevronDown className="text-xl text-gray-100" />}
+          </button>
           {!!serverId && (
-            <>
-              <HiChevronDown className="text-xl text-gray-100" />
-              <PopupMenu clickTarget={btnRef.current} popupBoundary={sidebarRef.current} top={55} left={12}>
-                <ul className="w-52 text-xs font-bold text-gray-500">
-                  <li className="w-full">
-                    <button className="flex w-full items-center justify-between rounded p-2 text-start tracking-wide hover:bg-blurple-500 hover:text-white active:bg-blurple-600">
-                      <span>Invite People</span>
-                      <span>
-                        <HiUserAdd className="text-lg" />
-                      </span>
-                    </button>
-                  </li>
-                  <li className="w-full">
-                    <button className="flex w-full items-center justify-between rounded p-2 text-start tracking-wide hover:bg-blurple-500 hover:text-white active:bg-blurple-600">
-                      <span>Add Channel</span>
-                      <span>
-                        <HiPlusCircle className="text-lg" />
-                      </span>
-                    </button>
-                  </li>
-                  <li className="w-full">
-                    <button className="flex w-full items-center justify-between rounded p-2 text-start tracking-wide hover:bg-blurple-500 hover:text-white active:bg-blurple-600">
-                      <span>Edit Server</span>
-                      <span>
-                        <HiCog className="text-lg" />
-                      </span>
-                    </button>
-                  </li>
-                </ul>
-              </PopupMenu>
-            </>
+            <PopupMenu clickTarget={btnRef.current} popupBoundary={sidebarRef.current} top={55} left={12}>
+              <ul className="w-52 text-xs font-bold text-gray-500">
+                <li className="w-full">
+                  <button className="flex w-full items-center justify-between rounded p-2 text-start tracking-wide hover:bg-blurple-500 hover:text-white active:bg-blurple-600">
+                    <span>Invite People</span>
+                    <span>
+                      <HiUserAdd className="text-lg" />
+                    </span>
+                  </button>
+                </li>
+                <li className="w-full">
+                  <button className="flex w-full items-center justify-between rounded p-2 text-start tracking-wide hover:bg-blurple-500 hover:text-white active:bg-blurple-600">
+                    <span>Add Channel</span>
+                    <span>
+                      <HiPlusCircle className="text-lg" />
+                    </span>
+                  </button>
+                </li>
+                <li className="w-full">
+                  <button
+                    onClick={onEditServer}
+                    className="flex w-full items-center justify-between rounded p-2 text-start tracking-wide hover:bg-blurple-500 hover:text-white active:bg-blurple-600"
+                  >
+                    <span>Edit Server</span>
+                    <span>
+                      <HiCog className="text-lg" />
+                    </span>
+                  </button>
+                </li>
+              </ul>
+            </PopupMenu>
           )}
-        </button>
+        </div>
         <ul className="flex flex-1 flex-col px-2 py-4 font-medium">{channelList}</ul>
         <CurrentUserInfo onEditProfile={onEditProfile} onSignOut={onSignOut} />
       </div>
