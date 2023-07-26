@@ -25,7 +25,7 @@ function SidebarItem({ onClick, active, popupText, children }) {
       <div
         className={
           "absolute left-[4.3rem] w-max rounded-md bg-gray-900 p-2 font-bold text-gray-400 shadow-xl transition-all" +
-          (hover ? " scale-100 opacity-100" : " scale-90 opacity-0 -z-10")
+          (hover ? " scale-100 opacity-100 z-10" : " scale-90 opacity-0 -z-10")
         }
       >
         <div className="absolute -left-1 top-[calc(50%-0.25rem)] h-2 w-2 rotate-45 bg-gray-900"></div>

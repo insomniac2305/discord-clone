@@ -1,16 +1,19 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import SidebarItem from "./SidebarItem";
 import { LogoNoText } from "../../components/Logo";
-import { HiOutlinePlus } from "react-icons/hi";
+import { HiChevronDown, HiCog, HiOutlinePlus, HiPlusCircle, HiUserAdd } from "react-icons/hi";
 import calculateColor from "../../util/CalculateColor";
 import ChannelItem from "./ChannelItem";
 import CurrentUserInfo from "./CurrentUserInfo";
+import PopupMenu from "../../components/PopupMenu";
 
 function Sidebar({ onNewServer, isVisible, servers, channels, onToggle, onEditProfile, onSignOut }) {
   const navigate = useNavigate();
   let { serverId, channelId } = useParams();
   const [heading, setHeading] = useState("");
+  const sidebarRef = useRef(null);
+  const btnRef = useRef(null);
 
   useEffect(() => {
     if (serverId) {
@@ -79,7 +82,10 @@ function Sidebar({ onNewServer, isVisible, servers, channels, onToggle, onEditPr
   }
 
   return (
-    <div className={"flex w-fit transition-all " + (isVisible ? "-translate-x-[0rem]" : "-translate-x-[20rem]")}>
+    <div
+      ref={sidebarRef}
+      className={"flex w-fit transition-all " + (isVisible ? "-translate-x-[0rem]" : "-translate-x-[20rem]")}
+    >
       <nav className="flex w-[4.5rem] flex-col items-center gap-2 bg-gray-900 py-3">
         <SidebarItem popupText="Home" onClick={() => navigate("/app")} active={!serverId}>
           <div
@@ -102,9 +108,48 @@ function Sidebar({ onNewServer, isVisible, servers, channels, onToggle, onEditPr
         </SidebarItem>
       </nav>
       <div className="flex w-[15.5rem] flex-col bg-gray-800  text-gray-600">
-        <div className="flex h-12 items-center px-4 shadow shadow-black">
-          <h1 className="font-bold text-gray-100">{heading}</h1>
-        </div>
+        <button
+          ref={btnRef}
+          className={
+            "relative flex h-12 items-center px-4 text-start shadow shadow-black " +
+            (serverId ? "hover:bg-gray-680 focus:bg-gray-680" : "hover:cursor-default")
+          }
+        >
+          <h1 className="flex-1 font-bold text-gray-100">{heading}</h1>
+          {!!serverId && (
+            <>
+              <HiChevronDown className="text-xl text-gray-100" />
+              <PopupMenu clickTarget={btnRef.current} popupBoundary={sidebarRef.current} top={55} left={12}>
+                <ul className="w-52 text-xs font-bold text-gray-500">
+                  <li className="w-full">
+                    <button className="flex w-full items-center justify-between rounded p-2 text-start tracking-wide hover:bg-blurple-500 hover:text-white active:bg-blurple-600">
+                      <span>Invite People</span>
+                      <span>
+                        <HiUserAdd className="text-lg" />
+                      </span>
+                    </button>
+                  </li>
+                  <li className="w-full">
+                    <button className="flex w-full items-center justify-between rounded p-2 text-start tracking-wide hover:bg-blurple-500 hover:text-white active:bg-blurple-600">
+                      <span>Add Channel</span>
+                      <span>
+                        <HiPlusCircle className="text-lg" />
+                      </span>
+                    </button>
+                  </li>
+                  <li className="w-full">
+                    <button className="flex w-full items-center justify-between rounded p-2 text-start tracking-wide hover:bg-blurple-500 hover:text-white active:bg-blurple-600">
+                      <span>Edit Server</span>
+                      <span>
+                        <HiCog className="text-lg" />
+                      </span>
+                    </button>
+                  </li>
+                </ul>
+              </PopupMenu>
+            </>
+          )}
+        </button>
         <ul className="flex flex-1 flex-col px-2 py-4 font-medium">{channelList}</ul>
         <CurrentUserInfo onEditProfile={onEditProfile} onSignOut={onSignOut} />
       </div>
