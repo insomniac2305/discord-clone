@@ -1,4 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
+import { HiX } from "react-icons/hi";
 
 function Modal({ open, onClose, children, locked, dimBackdrop }) {
   const modalRef = useRef(null);
@@ -49,10 +50,17 @@ function Modal({ open, onClose, children, locked, dimBackdrop }) {
         onTransitionEnd={onTransitionEnd}
         className={
           classes +
-          "  h-full max-h-full min-h-fit w-full min-w-fit max-w-full p-0 transition-all duration-300 ease-in backdrop:transition-all focus:outline-0 active:outline-0 sm:h-fit sm:w-fit sm:rounded sm:duration-200 sm:ease-[cubic-bezier(.25,.25,.3,1.5)] overflow-hidden"
+          "  h-full max-h-full min-h-fit w-full min-w-fit max-w-full overflow-hidden p-0 transition-all duration-300 ease-in backdrop:transition-all focus:outline-0 active:outline-0 sm:h-fit sm:w-fit sm:rounded sm:duration-200 sm:ease-[cubic-bezier(.25,.25,.3,1.5)]"
         }
       >
-        {renderContent && children}
+        {renderContent && (
+          <>
+            <button className="absolute right-3 top-3 text-2xl text-gray-650" onClick={onClose}>
+              <HiX />
+            </button>
+            {children}
+          </>
+        )}
       </dialog>
     </>
   );
