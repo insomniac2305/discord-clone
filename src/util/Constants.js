@@ -3,6 +3,7 @@ export const REGISTER = "register";
 export const NEWSERVER = "newserver";
 export const EDITSERVER = "editserver";
 export const EDITPROFILE = "editprofile";
+export const SERVERINVITE = "serverinvite";
 export const CHANNEL_TEXT = "text";
 export const CHANNEL_VOICE = "voice";
 export const ROLE_ADMIN = "admin";

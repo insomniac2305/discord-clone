@@ -17,6 +17,7 @@ function Sidebar({
   onEditProfile,
   onSignOut,
   onEditServer,
+  onOpenServerInvite,
   currentServer,
 }) {
   const navigate = useNavigate();
@@ -132,7 +133,10 @@ function Sidebar({
             <PopupMenu clickTarget={btnRef.current} popupBoundary={sidebarRef.current} top={55} left={12}>
               <ul className="w-52 text-xs font-bold text-gray-500">
                 <li className="w-full">
-                  <button className="flex w-full items-center justify-between rounded p-2 text-start tracking-wide hover:bg-blurple-500 hover:text-white active:bg-blurple-600">
+                  <button
+                    onClick={onOpenServerInvite}
+                    className="flex w-full items-center justify-between rounded p-2 text-start tracking-wide hover:bg-blurple-500 hover:text-white active:bg-blurple-600"
+                  >
                     <span>Invite People</span>
                     <span>
                       <HiUserAdd className="text-lg" />

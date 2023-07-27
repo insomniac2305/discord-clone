@@ -5,7 +5,7 @@ import Modal from "../../components/Modal";
 import ServerForm from "./ServerForm";
 import Sidebar from "./Sidebar";
 import ChannelHeader from "./ChannelHeader";
-import { NEWSERVER, EDITPROFILE, MAX_MOBILE_WIDTH, CHANNEL_TEXT, EDITSERVER } from "../../util/Constants";
+import { NEWSERVER, EDITPROFILE, MAX_MOBILE_WIDTH, CHANNEL_TEXT, EDITSERVER, SERVERINVITE } from "../../util/Constants";
 import useWindowDimensions from "../../hooks/useWindowDimensions";
 import useUserServers from "../../hooks/useUserServers";
 import useToggle from "../../hooks/useToggle";
@@ -15,6 +15,7 @@ import UserForm from "../../components/UserForm";
 import { signOut } from "firebase/auth";
 import AuthContext from "../../util/AuthContext";
 import LoadingScreen from "../../components/LoadingScreen";
+import ServerInvite from "./ServerInvite";
 
 function Main() {
   const navigate = useNavigate();
@@ -75,6 +76,7 @@ function Main() {
           onNewServer={() => setOpenModal(NEWSERVER)}
           onEditServer={() => setOpenModal(EDITSERVER)}
           onEditProfile={() => setOpenModal(EDITPROFILE)}
+          onOpenServerInvite={() => setOpenModal(SERVERINVITE)}
           onSignOut={() => signOut(auth)}
         />
         <div
@@ -112,6 +114,9 @@ function Main() {
             currentAvatarUrl={user?.photoURL}
             onSubmit={() => setOpenModal(null)}
           />
+        </Modal>
+        <Modal open={openModal === SERVERINVITE} dimBackdrop={true} locked={false} onClose={() => setOpenModal(null)}>
+          <ServerInvite serverName={currentServer?.name} serverId={currentServer?.id} />
         </Modal>
       </div>
     );

@@ -1,6 +1,6 @@
 import React from "react";
 
-function TextInput({ name, label, required, type, value, onChange }) {
+function TextInput({ name, label, required, type, value, onChange, readOnly }) {
   return (
     <div className="flex w-full flex-col">
       <label htmlFor={name} className="mb-2 text-xs font-bold uppercase tracking-wider text-gray-500">
@@ -12,6 +12,7 @@ function TextInput({ name, label, required, type, value, onChange }) {
         id={name}
         value={value}
         required={required}
+        readOnly={readOnly}
         onChange={(e) => onChange(e.target.value)}
         className="rounded bg-gray-900 p-2"
       />
