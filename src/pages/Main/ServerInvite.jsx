@@ -3,7 +3,9 @@ import TextInput from "../../components/TextInput";
 import PrimaryButton from "../../components/PrimaryButton";
 
 function ServerInvite({ serverId, serverName }) {
-  const baseUrl = window.location.protocol + "//" + window.location.hostname;
+  const { protocol, hostname, port } = window.location;
+  const baseUrl = protocol + "//" + hostname + (["80", "8080", "443"].includes(port) ? "" : ":" + port);
+
   const [isCopied, setIsCopied] = useState(false);
 
   useEffect(() => {
