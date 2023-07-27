@@ -21,7 +21,7 @@ function UserForm({ isNew, currentEmail, currentUsername, currentAvatarUrl, onSu
   const [currentUser, currentUserLoading] = useContext(AuthContext);
 
   useEffect(() => {
-    if ((createdUser || currentUser) && !createLoading && !currentUserLoading) {
+    if (isNew && (createdUser || currentUser) && !createLoading && !currentUserLoading) {
       navigate("/app");
     }
   }, [createdUser, createLoading, currentUser, currentUserLoading, navigate]);
