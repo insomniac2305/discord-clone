@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { collection, documentId, onSnapshot, query, where } from "firebase/firestore";
+import { collection, documentId, onSnapshot, orderBy, query, where } from "firebase/firestore";
 import { db } from "../firebase";
 
 function useUserServers(userId) {
@@ -57,7 +57,12 @@ function useUserServers(userId) {
     );
 
     const unsubscribeChannels = onSnapshot(
-      query(collection(db, "serverChannels"), where("serverId", "in", memberships)),
+      query(
+        collection(db, "serverChannels"),
+        where("serverId", "in", memberships),
+        orderBy("type"),
+        orderBy("name")
+      ),
       (channelSnapshot) => {
         const channelData = channelSnapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
         setChannels(channelData);
