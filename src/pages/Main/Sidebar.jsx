@@ -19,6 +19,8 @@ function Sidebar({
   onEditServer,
   onOpenServerInvite,
   currentServer,
+  onNewChannel,
+  onEditChannel,
 }) {
   const navigate = useNavigate();
   let { serverId, channelId } = useParams();
@@ -86,6 +88,7 @@ function Sidebar({
           active={channel.id === channelId}
           linkTo={`/app/${channel.serverId}/${channel.id}`}
           onClick={onToggle}
+          onEdit={() => onEditChannel(channel)}
         />
       );
     });
@@ -144,7 +147,10 @@ function Sidebar({
                   </button>
                 </li>
                 <li className="w-full">
-                  <button className="flex w-full items-center justify-between rounded p-2 text-start tracking-wide hover:bg-blurple-500 hover:text-white active:bg-blurple-600">
+                  <button
+                    onClick={onNewChannel}
+                    className="flex w-full items-center justify-between rounded p-2 text-start tracking-wide hover:bg-blurple-500 hover:text-white active:bg-blurple-600"
+                  >
                     <span>Add Channel</span>
                     <span>
                       <HiPlusCircle className="text-lg" />

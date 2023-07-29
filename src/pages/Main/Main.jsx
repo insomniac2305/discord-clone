@@ -5,7 +5,16 @@ import Modal from "../../components/Modal";
 import ServerForm from "./ServerForm";
 import Sidebar from "./Sidebar";
 import ChannelHeader from "./ChannelHeader";
-import { NEWSERVER, EDITPROFILE, MAX_MOBILE_WIDTH, CHANNEL_TEXT, EDITSERVER, SERVERINVITE } from "../../util/Constants";
+import {
+  NEWSERVER,
+  EDITPROFILE,
+  MAX_MOBILE_WIDTH,
+  CHANNEL_TEXT,
+  EDITSERVER,
+  SERVERINVITE,
+  NEWCHANNEL,
+  EDITCHANNEL,
+} from "../../util/Constants";
 import useWindowDimensions from "../../hooks/useWindowDimensions";
 import useUserServers from "../../hooks/useUserServers";
 import useToggle from "../../hooks/useToggle";
@@ -16,6 +25,7 @@ import { signOut } from "firebase/auth";
 import AuthContext from "../../util/AuthContext";
 import LoadingScreen from "../../components/LoadingScreen";
 import ServerInvite from "./ServerInvite";
+import ChannelForm from "./ChannelForm";
 
 function Main() {
   const navigate = useNavigate();
@@ -28,6 +38,7 @@ function Main() {
   let { serverId, channelId } = useParams();
   const [currentChannel, setCurrentChannel] = useState(null);
   const [currentServer, setCurrentServer] = useState(null);
+  const [channelToEdit, setChannelToEdit] = useState(null);
 
   useEffect(() => {
     if (!user && !userLoading) {
@@ -75,6 +86,11 @@ function Main() {
           onToggle={() => width < MAX_MOBILE_WIDTH && toggleSidebarVisible()}
           onNewServer={() => setOpenModal(NEWSERVER)}
           onEditServer={() => setOpenModal(EDITSERVER)}
+          onNewChannel={() => setOpenModal(NEWCHANNEL)}
+          onEditChannel={(channel) => {
+            setChannelToEdit(channel);
+            setOpenModal(EDITCHANNEL);
+          }}
           onEditProfile={() => setOpenModal(EDITPROFILE)}
           onOpenServerInvite={() => setOpenModal(SERVERINVITE)}
           onSignOut={() => signOut(auth)}
@@ -104,6 +120,19 @@ function Main() {
             serverId={currentServer?.id}
             currentName={currentServer?.name}
             currentIconUrl={currentServer?.iconUrl}
+          />
+        </Modal>
+        <Modal open={openModal === NEWCHANNEL} dimBackdrop={true} locked={false} onClose={() => setOpenModal(null)}>
+          <ChannelForm onClose={() => setOpenModal(null)} isNew={true} serverId={currentServer?.id} />
+        </Modal>
+        <Modal open={openModal === EDITCHANNEL} dimBackdrop={true} locked={false} onClose={() => setOpenModal(null)}>
+          <ChannelForm
+            onClose={() => setOpenModal(null)}
+            isNew={false}
+            serverId={currentServer?.id}
+            channelId={channelToEdit?.id}
+            currentName={channelToEdit?.name}
+            currentType={channelToEdit?.type}
           />
         </Modal>
         <Modal open={openModal === EDITPROFILE} dimBackdrop={true} locked={false} onClose={() => setOpenModal(null)}>
