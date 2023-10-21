@@ -18,23 +18,23 @@ async function parseResponse(res) {
   return responseData;
 }
 
-function useBackendRequest(endpoint, token, method, body) {
+function useBackendRequest(endpoint) {
   const [data, setData] = useState();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState();
 
-  const headers = {};
-  if (body) headers["Content-Type"] = "application/json";
-  if (token) headers["Authorization"] = "Bearer " + token;
+  const execute = async (token, method, body) => {
+    const headers = {};
+    if (body) headers["Content-Type"] = "application/json";
+    if (token) headers["Authorization"] = "Bearer " + token;
 
-  const options = {
-    method: method || "GET",
-    headers,
-    body: JSON.stringify(body),
-    mode: "cors",
-  };
+    const options = {
+      method: method || "GET",
+      headers,
+      body: JSON.stringify(body),
+      mode: "cors",
+    };
 
-  const execute = async () => {
     setLoading(true);
     try {
       const response = await fetch(baseUrl + endpoint, options);
@@ -56,7 +56,7 @@ function useBackendRequest(endpoint, token, method, body) {
     }
   };
 
-  return [data, loading, error, execute];
+  return [execute, data, loading, error];
 }
 
 export default useBackendRequest;

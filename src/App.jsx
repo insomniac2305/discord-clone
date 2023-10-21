@@ -1,16 +1,15 @@
-import React from "react";
+import React, { useState } from "react";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import Main from "./pages/Main/Main";
 import Home from "./pages/Home/Home";
 import UserAuth from "./pages/UserAuth/UserAuth";
 import { LOGIN, REGISTER } from "./util/Constants";
-import { auth } from "./firebase";
-import { useAuthState } from "react-firebase-hooks/auth";
 import AuthContext from "./util/AuthContext";
 import JoinServer from "./pages/JoinServer/JoinServer";
 
 function App() {
-  const [user, loading, error] = useAuthState(auth);
+  const [user, setUser] = useState();
+  const [token, setToken] = useState();
 
   const router = createBrowserRouter([
     { path: "/", element: <Home /> },
@@ -31,7 +30,7 @@ function App() {
   ]);
 
   return (
-    <AuthContext.Provider value={[user, loading, error]}>
+    <AuthContext.Provider value={[user, token, setUser, setToken]}>
       <RouterProvider router={router} />
     </AuthContext.Provider>
   );
