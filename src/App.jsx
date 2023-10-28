@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import Main from "./pages/Main/Main";
 import Home from "./pages/Home/Home";
@@ -6,10 +6,10 @@ import UserAuth from "./pages/UserAuth/UserAuth";
 import { LOGIN, REGISTER } from "./util/Constants";
 import AuthContext from "./util/AuthContext";
 import JoinServer from "./pages/JoinServer/JoinServer";
+import useAuth from "./hooks/useAuth";
 
 function App() {
-  const [user, setUser] = useState();
-  const [token, setToken] = useState();
+  const [user, setUser, token, setToken, authLoading] = useAuth();
 
   const router = createBrowserRouter([
     { path: "/", element: <Home /> },
@@ -30,7 +30,7 @@ function App() {
   ]);
 
   return (
-    <AuthContext.Provider value={[user, token, setUser, setToken]}>
+    <AuthContext.Provider value={[user, token, setUser, setToken, authLoading]}>
       <RouterProvider router={router} />
     </AuthContext.Provider>
   );
