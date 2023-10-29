@@ -5,41 +5,53 @@ import LinkButton from "./LinkButton";
 import PrimaryButton from "./PrimaryButton";
 import IconPicker from "./IconPicker";
 import { useNavigate } from "react-router-dom";
-import { auth } from "../firebase";
-import { useCreateUserWithEmailAndPassword } from "react-firebase-hooks/auth";
-import useUpdateUser from "../hooks/useUpdateUser";
 import AuthContext from "../util/AuthContext";
+import useBackendRequest from "../hooks/useBackendRequest";
+import useLogin from "../hooks/useLogin";
+import FormError from "./FormError";
 
-function UserForm({ isNew, currentEmail, currentUsername, currentAvatarUrl, onSubmit }) {
-  const [email, setEmail] = useState(currentEmail || "");
-  const [username, setUsername] = useState(currentUsername || "");
+function UserForm({ isNew, onSubmit }) {
+  const { user: currentUser, token: currentToken, authLoading } = useContext(AuthContext);
+  const [email, setEmail] = useState(currentUser?.email || "");
+  const [username, setUsername] = useState(currentUser?.name || "");
   const [password, setPassword] = useState("");
-  const [avatar, setAvatar] = useState(currentAvatarUrl);
+  const [avatar, setAvatar] = useState(currentUser?.avatar);
   const navigate = useNavigate();
-  const [createUser, createdUser, createLoading, createError] = useCreateUserWithEmailAndPassword(auth);
-  const [updateUser, updateLoading, updateError] = useUpdateUser(onSubmit);
-  const [currentUser, currentUserLoading] = useContext(AuthContext);
+  const [submitLogin, , loginLoading] = useLogin();
+  const [submitUser, userData, userLoading, userError] = useBackendRequest(
+    isNew ? "api/users" : `api/users/${currentUser?.id}`
+  );
 
   useEffect(() => {
-    if (isNew && (createdUser || currentUser) && !createLoading && !currentUserLoading) {
+    if (currentUser) {
       navigate("/app");
     }
-  }, [createdUser, createLoading, currentUser, currentUserLoading, navigate]);
+  }, [currentUser, navigate]);
 
-  const register = async (e) => {
+  useEffect(() => {
+    if (userData) {
+      isNew ? submitLogin(email, password) : onSubmit();
+    }
+  }, [isNew, userData]);
+
+  const register = (e) => {
     e.preventDefault();
-    await createUser(email, password);
-    await updateUser({ username: username });
+    submitUser(null, "POST", { email, name: username, password });
   };
 
-  const update = async (e) => {
+  const update = (e) => {
     e.preventDefault();
-    updateUser({
-      email: email !== currentEmail ? email : null,
-      username: username !== currentUsername ? username : null,
-      password: password !== "" ? password : null,
-      avatarFile: avatar !== currentAvatarUrl ? avatar : null,
-    });
+    submitUser(
+      currentToken,
+      "PUT",
+      {
+        email: email !== currentUser.email ? email : null,
+        name: username !== currentUser.name ? username : null,
+        password: password !== "" ? password : null,
+        avatar: avatar !== currentUser.avatar ? avatar : null,
+      },
+      avatar !== currentUser.avatar
+    );
   };
 
   return (
@@ -51,7 +63,7 @@ function UserForm({ isNew, currentEmail, currentUsername, currentAvatarUrl, onSu
       >
         {isNew && <Logo />}
         <h1 className="text-xl font-bold tracking-wide">{isNew ? "Create new account" : "Edit your profile"}</h1>
-        {!isNew && <IconPicker onChange={setAvatar} initialIconUrl={currentAvatarUrl} />}
+        {!isNew && <IconPicker onChange={setAvatar} initialIconUrl={currentUser.avatar} />}
         <TextInput
           label="E-Mail"
           type="email"
@@ -77,10 +89,12 @@ function UserForm({ isNew, currentEmail, currentUsername, currentAvatarUrl, onSu
           required={isNew}
         />
         <div className="w-full">
-          {(createError || updateError) && (
-            <p className="pb-2 text-sm text-red">There was an error: {createError?.message || updateError?.message}</p>
-          )}
-          <PrimaryButton text={isNew ? "Continue" : "Save"} loading={createLoading || updateLoading || currentUserLoading} type={"submit"} />
+          {userError && <FormError error={userError} />}
+          <PrimaryButton
+            text={isNew ? "Continue" : "Save"}
+            loading={userLoading || authLoading || loginLoading}
+            type={"submit"}
+          />
           {isNew && (
             <p className="mt-2 w-full text-left text-xs tracking-wide text-gray-500">
               <LinkButton text="Already have an account?" onClick={() => navigate("/login")} />

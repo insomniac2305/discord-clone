@@ -23,9 +23,9 @@ function useBackendRequest(endpoint) {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState();
 
-  const execute = async (token, method, body) => {
+  const execute = async (token, method, body, hasFiles) => {
     const headers = {};
-    if (body) headers["Content-Type"] = "application/json";
+    if (body) headers["Content-Type"] = hasFiles ? "multipart/form-data" : "application/json";
     if (token) headers["Authorization"] = "Bearer " + token;
 
     const options = {

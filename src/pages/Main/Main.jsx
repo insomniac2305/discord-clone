@@ -33,7 +33,7 @@ function Main() {
   const [isSidebarVisible, toggleSidebarVisible] = useToggle(true);
   const [isMembersVisible, toggleMembersVisible] = useToggle(false);
   const { width } = useWindowDimensions();
-  const [user, userLoading] = useContext(AuthContext);
+  const {user, authLoading} = useContext(AuthContext);
   const [servers, channels, serversLoading] = useUserServers(user?.uid);
   let { serverId, channelId } = useParams();
   const [currentChannel, setCurrentChannel] = useState(null);
@@ -41,10 +41,10 @@ function Main() {
   const [channelToEdit, setChannelToEdit] = useState(null);
 
   useEffect(() => {
-    if (!user && !userLoading) {
+    if (!user && !authLoading) {
       navigate("/login");
     }
-  }, [user, userLoading]);
+  }, [user, authLoading]);
 
   useEffect(() => {
     if (width >= MAX_MOBILE_WIDTH && !isSidebarVisible) {
@@ -73,7 +73,7 @@ function Main() {
     }
   }, [serverId, channels, channelId]);
 
-  if (userLoading || serversLoading) {
+  if (authLoading || serversLoading) {
     return <LoadingScreen loading={true} />;
   } else {
     return (

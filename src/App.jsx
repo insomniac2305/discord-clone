@@ -30,7 +30,7 @@ function App() {
   ]);
 
   return (
-    <AuthContext.Provider value={[user, token, setUser, setToken, authLoading]}>
+    <AuthContext.Provider value={{user, token, setUser, setToken, authLoading}}>
       <RouterProvider router={router} />
     </AuthContext.Provider>
   );

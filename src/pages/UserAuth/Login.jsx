@@ -4,15 +4,16 @@ import TextInput from "../../components/TextInput";
 import LinkButton from "../../components/LinkButton";
 import PrimaryButton from "../../components/PrimaryButton";
 import { useNavigate } from "react-router-dom";
-import useBackendRequest from "../../hooks/useBackendRequest";
 import AuthContext from "../../util/AuthContext";
+import useLogin from "../../hooks/useLogin";
+import FormError from "../../components/FormError";
 
 function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
-  const [requestLogin, loginData, loginLoading, loginError] = useBackendRequest("login");
-  const [user, , setUser, setToken] = useContext(AuthContext);
+  const [submitLogin, , loginLoading, loginError] = useLogin();
+  const { user } = useContext(AuthContext);
 
   useEffect(() => {
     if (user) {
@@ -20,23 +21,16 @@ function Login() {
     }
   }, [user, navigate]);
 
-  useEffect(() => {
-    if (loginData && !loginError) {
-      setUser(loginData.user);
-      setToken(loginData.token);
-    }
-  }, [loginData, loginError]);
-
-  const submitLogin = (e) => {
+  const onSubmit = (e) => {
     e.preventDefault();
-    requestLogin(null, "POST", { email, password });
+    submitLogin(email, password);
   };
 
   return (
     <>
       <form
         action="#"
-        onSubmit={submitLogin}
+        onSubmit={onSubmit}
         className="flex h-full w-full flex-col items-center gap-5 bg-gray-800 px-4 py-6 text-gray-300 sm:h-auto sm:w-[30rem] sm:rounded sm:shadow-md"
       >
         <Logo />
@@ -57,7 +51,7 @@ function Login() {
           </p>
         </div>
         <div className="w-full">
-          {loginError && <p className="pb-2 text-sm text-red">There was an error: {loginError.message}</p>}
+          {loginError && <FormError error={loginError} />}
           <PrimaryButton text="Sign in" type="submit" loading={loginLoading} />
           <p className="mt-2 w-full text-left text-xs tracking-wide text-gray-500">
             Need an account? <LinkButton text="Register" onClick={() => navigate("/register")} />
