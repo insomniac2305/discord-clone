@@ -4,7 +4,7 @@ import User from "../../components/User";
 import { MdLogout } from "react-icons/md";
 
 function CurrentUserInfo({ onEditProfile, onSignOut }) {
-  const [user] = useContext(AuthContext);
+  const { user } = useContext(AuthContext);
 
   return (
     <div className="flex justify-between bg-gray-850 p-1">
@@ -12,7 +12,7 @@ function CurrentUserInfo({ onEditProfile, onSignOut }) {
         className="overflow-hidden text-ellipsis rounded p-1 pr-2 transition hover:bg-gray-700 active:bg-gray-680"
         onClick={onEditProfile}
       >
-        <User uid={user?.uid} username={user?.displayName || "User"} avatarUrl={user?.photoURL} />
+        <User uid={user?._id} username={user?.name || "User"} avatarUrl={user?.avatar} />
       </button>
       <button className="p-1" onClick={onSignOut}>
         <MdLogout className="text-xl text-gray-500 transition-all hover:text-red" />

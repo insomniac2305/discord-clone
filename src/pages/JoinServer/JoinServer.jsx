@@ -8,13 +8,13 @@ import LoadingScreen from "../../components/LoadingScreen";
 function JoinServer() {
   const navigate = useNavigate();
   const { serverId } = useParams();
-  const [user] = useContext(AuthContext);
+  const { user } = useContext(AuthContext);
   const [addServerMember, loading, error] = useAddServerMember();
 
   useEffect(() => {
     const addCurrentUserToServer = async () => {
       if (user && serverId) {
-        await addServerMember(user.uid, serverId, ROLE_MEMBER, user.displayName, user.photoURL);
+        await addServerMember(user._id, serverId, ROLE_MEMBER, user.name, user.avatar);
         !error && navigate("/app/" + serverId);
       } else {
         navigate("/app");
