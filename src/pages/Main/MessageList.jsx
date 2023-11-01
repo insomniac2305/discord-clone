@@ -14,25 +14,28 @@ function MessageList({ messages }) {
         messages.map((message) => {
           let listItem = [];
 
-          if (message.timestamp.toDate().toDateString() !== previousMessage?.timestamp.toDate().toDateString()) {
+          const messageDate = new Date(message.createdAt);
+          const prevMessageDate = new Date(previousMessage?.createdAt);
+
+          if (messageDate?.toDateString() !== prevMessageDate?.toDateString()) {
             listItem.push(
-              <MessageDivider key={message.timestamp.valueOf()}>
-                {dateFormat.format(message.timestamp.toDate())}
+              <MessageDivider key={message.createdAt}>
+                {dateFormat.format(messageDate)}
               </MessageDivider>
             );
           }
 
           const isFollowUp =
-            message.userId === previousMessage?.userId &&
-            message.timestamp.toMillis() - previousMessage?.timestamp.toMillis() < 60000;
+            message.user === previousMessage?.user &&
+            messageDate?.valueOf() - prevMessageDate?.valueOf() < 60000;
 
           listItem.push(
             <Message
-              key={message.id}
+              key={message._id}
               text={message.text}
-              username={message.username || "Empty"}
-              avatarUrl={message.avatarUrl}
-              timestamp={dateTimeFormat.format(message.timestamp.toDate())}
+              username={message.user?.name || "Empty"}
+              avatarUrl={message.user?.avatar}
+              createdAt={dateTimeFormat.format(messageDate)}
               isFollowUp={isFollowUp}
             />
           );

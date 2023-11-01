@@ -123,7 +123,7 @@ function Main() {
             currentChannel={currentChannel}
           />
           {!serverId && <ChannelPlaceholder />}
-          {!!serverId && <ChannelContent currentChannel={currentChannel} isMembersVisible={isMembersVisible} />}
+          {!!serverId && <ChannelContent serverId={serverId} currentChannel={currentChannel} isMembersVisible={isMembersVisible} />}
         </div>
         <Modal open={openModal === NEWSERVER} dimBackdrop={true} locked={false} onClose={() => setOpenModal(null)}>
           <ServerForm onClose={() => setOpenModal(null)} isNew={true} />

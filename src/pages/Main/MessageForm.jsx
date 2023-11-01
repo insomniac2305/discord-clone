@@ -3,14 +3,16 @@ import { BiSolidPlusCircle, BiSolidSmile } from "react-icons/bi";
 import { PiPaperPlaneRightFill } from "react-icons/pi";
 import useWindowDimensions from "../../hooks/useWindowDimensions";
 import AuthContext from "../../util/AuthContext";
-import useCreateMessage from "../../hooks/useCreateMessage";
+import useBackendRequest from "../../hooks/useBackendRequest";
 
-function MessageForm({ channelName, channelId }) {
+function MessageForm({ serverId, channelName, channelId }) {
   const [message, setMessage] = useState("");
-  const [createMessage, createError] = useCreateMessage();
+  const [submitMessage, , , submitError] = useBackendRequest(
+    serverId && channelId && `api/servers/${serverId}/channels/${channelId}/messages`
+  );
   const messageTextRef = useRef(null);
   const { height } = useWindowDimensions();
-  const { user } = useContext(AuthContext);
+  const { token } = useContext(AuthContext);
 
   const resizeMessageTextArea = () => {
     messageTextRef.current.style.height = "auto";
@@ -24,7 +26,7 @@ function MessageForm({ channelName, channelId }) {
   };
 
   const sendMessage = () => {
-    createMessage(channelId, message, user._id, user.name, user.avatar);
+    submitMessage(token, "POST", { text: message });
     setMessage("");
     messageTextRef.current.value = "";
     resizeMessageTextArea();
@@ -58,8 +60,8 @@ function MessageForm({ channelName, channelId }) {
             id="new-message"
             placeholder={`Message to #${channelName}`}
             ref={messageTextRef}
-            value={createError ? createError : message}
-            readOnly={createError}
+            value={submitError ? submitError.message : message}
+            readOnly={submitError}
             rows={1}
             onChange={onMessageChange}
             onKeyDown={onKey}

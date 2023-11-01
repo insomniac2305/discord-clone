@@ -1,19 +1,29 @@
-import React, { useEffect, useRef } from "react";
+import React, { useContext, useEffect, useRef } from "react";
 import ChannelMembers from "./ChannelMembers";
 import MessageForm from "./MessageForm";
 import MessageList from "./MessageList";
-import useChannelMessages from "../../hooks/useChannelMessages";
+import useBackendRequest from "../../hooks/useBackendRequest";
+import AuthContext from "../../util/AuthContext";
 
-function ChannelContent({ isMembersVisible, currentChannel }) {
+function ChannelContent({ isMembersVisible, serverId, currentChannel }) {
+  const { token } = useContext(AuthContext);
   const messageContainerRef = useRef(null);
 
-  const [messages, loading, error] = useChannelMessages(currentChannel?.id);
+  const [requestMessages, messages, messagesLoading, messagesError] = useBackendRequest(
+    serverId && currentChannel && `api/servers/${serverId}/channels/${currentChannel._id}/messages`
+  );
+
+  useEffect(() => {
+    if (token && serverId && currentChannel) {
+      requestMessages(token);
+    }
+  }, [token, serverId, currentChannel]);
 
   const scrollToBottom = () => messageContainerRef?.current.scrollTo(0, messageContainerRef.current.scrollHeight);
 
   useEffect(() => {
-    !loading && scrollToBottom();
-  }, [loading]);
+    !messagesLoading && scrollToBottom();
+  }, [messagesLoading]);
 
   useEffect(() => {
     if (messageContainerRef) {
@@ -32,13 +42,15 @@ function ChannelContent({ isMembersVisible, currentChannel }) {
         }
       >
         <div ref={messageContainerRef} className="flex-1 overflow-x-hidden overflow-y-scroll">
-          {!loading && <MessageList messages={messages} />}
-          {loading && <div>Loading ...</div>}
-          {error && <div>Error: {error.message}</div>}
+          {messages && <MessageList messages={messages} />}
+          {!messages && messagesLoading && <div>Loading ...</div>}
+          {messagesError && <div>Error: {messagesError.message}</div>}
         </div>
-        <MessageForm channelName={currentChannel?.name} channelId={currentChannel?.id} />
+        {currentChannel && (
+          <MessageForm serverId={serverId} channelName={currentChannel?.name} channelId={currentChannel?._id} />
+        )}
       </div>
-      <ChannelMembers isVisible={isMembersVisible} serverId={currentChannel?.serverId} />
+      <ChannelMembers isVisible={isMembersVisible} serverId={serverId} />
     </div>
   );
 }
