@@ -22,7 +22,12 @@ export function useLocalStorage(key, initialValue) {
     try {
       const newValue = value instanceof Function ? value(storedValue) : value;
 
-      window.localStorage.setItem(key, JSON.stringify(newValue));
+      if (typeof value === "undefined") {
+        window.localStorage.removeItem(key);
+      } else {
+        window.localStorage.setItem(key, JSON.stringify(newValue));
+      }
+
       setStoredValue(newValue);
 
       window.dispatchEvent(new Event("local-storage"));
