@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 const baseUrl = import.meta.env.VITE_BACKEND_URL;
 
@@ -22,6 +22,14 @@ function useBackendRequest(endpoint) {
   const [data, setData] = useState();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState();
+
+  useEffect(() => {
+    if (!endpoint) {
+      setData(undefined);
+      setLoading(false);
+      setError(undefined);
+    }
+  }, [endpoint]);
 
   const execute = async (token, method, body, hasFiles) => {
     const headers = {};
