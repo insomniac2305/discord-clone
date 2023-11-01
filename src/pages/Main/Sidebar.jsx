@@ -45,9 +45,9 @@ function Sidebar({
   if (servers) {
     serverList = servers.map((server) => {
       let backgroundStyle;
-      if (server.iconUrl) {
+      if (server.icon) {
         backgroundStyle = {
-          backgroundImage: `url(${server.iconUrl})`,
+          backgroundImage: `url(${server.icon})`,
         };
       } else {
         const colors = calculateColor(server.name);
@@ -59,16 +59,16 @@ function Sidebar({
 
       return (
         <SidebarItem
-          key={server.id}
+          key={server._id}
           popupText={server.name}
-          onClick={() => navigate(`/app/${server.id}`)}
-          active={serverId === server.id}
+          onClick={() => navigate(`/app/${server._id}`)}
+          active={serverId === server._id}
         >
           <div
             className="flex h-full w-full items-center justify-center bg-cover bg-center font-bold"
             style={backgroundStyle}
           >
-            {!server.iconUrl && server.name.charAt(0)}
+            {!server.icon && server.name.charAt(0)}
           </div>
         </SidebarItem>
       );
@@ -78,15 +78,14 @@ function Sidebar({
   let channelList;
 
   if (channels) {
-    const serverChannels = channels.filter((channel) => channel.serverId === serverId);
-    channelList = serverChannels.map((channel) => {
+    channelList = channels.map((channel) => {
       return (
         <ChannelItem
-          key={channel.id}
+          key={channel._id}
           type={channel.type}
           name={channel.name}
-          active={channel.id === channelId}
-          linkTo={`/app/${channel.serverId}/${channel.id}`}
+          active={channel._id === channelId}
+          linkTo={`/app/${serverId}/${channel._id}`}
           onClick={onToggle}
           onEdit={() => onEditChannel(channel)}
         />

@@ -1,4 +1,3 @@
-import { auth } from "../../firebase";
 import React, { useContext, useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import Modal from "../../components/Modal";
@@ -16,16 +15,15 @@ import {
   EDITCHANNEL,
 } from "../../util/Constants";
 import useWindowDimensions from "../../hooks/useWindowDimensions";
-import useUserServers from "../../hooks/useUserServers";
 import useToggle from "../../hooks/useToggle";
 import ChannelPlaceholder from "./ChannelPlaceholder";
 import ChannelContent from "./ChannelContent";
 import UserForm from "../../components/UserForm";
-import { signOut } from "firebase/auth";
 import AuthContext from "../../util/AuthContext";
 import LoadingScreen from "../../components/LoadingScreen";
 import ServerInvite from "./ServerInvite";
 import ChannelForm from "./ChannelForm";
+import useBackendRequest from "../../hooks/useBackendRequest";
 
 function Main() {
   const navigate = useNavigate();
@@ -33,9 +31,12 @@ function Main() {
   const [isSidebarVisible, toggleSidebarVisible] = useToggle(true);
   const [isMembersVisible, toggleMembersVisible] = useToggle(false);
   const { width } = useWindowDimensions();
-  const {user, authLoading} = useContext(AuthContext);
-  const [servers, channels, serversLoading] = useUserServers(user?.uid);
+  const { user, setUser, token, setToken, authLoading } = useContext(AuthContext);
   let { serverId, channelId } = useParams();
+  const [requestServers, servers, serversLoading] = useBackendRequest("api/servers");
+  const [requestChannels, channels, channelsLoading] = useBackendRequest(
+    serverId && `api/servers/${serverId}/channels`
+  );
   const [currentChannel, setCurrentChannel] = useState(null);
   const [currentServer, setCurrentServer] = useState(null);
   const [channelToEdit, setChannelToEdit] = useState(null);
@@ -53,21 +54,31 @@ function Main() {
   }, [width]);
 
   useEffect(() => {
+    if (user && token) {
+      requestServers(token);
+    }
+  }, [user, token]);
+
+  useEffect(() => {
+    if (user && token && serverId) {
+      requestChannels(token);
+    }
+  }, [user, token, serverId]);
+
+  useEffect(() => {
     if (serverId && servers) {
-      const serverFromList = servers.find((server) => server.id === serverId);
+      const serverFromList = servers.find((server) => server._id === serverId);
       setCurrentServer({ ...serverFromList });
     }
   }, [serverId, servers]);
 
   useEffect(() => {
     if (channels && channelId) {
-      const channelFromList = channels.find((channel) => channel.id === channelId);
+      const channelFromList = channels.find((channel) => channel._id === channelId);
       setCurrentChannel({ ...channelFromList });
     } else if (serverId && channels && !channelId) {
-      const firstTextChannel = channels.find(
-        (channel) => channel.serverId === serverId && channel.type === CHANNEL_TEXT
-      );
-      firstTextChannel && navigate(`/app/${serverId}/${firstTextChannel.id}`);
+      const firstTextChannel = channels.find((channel) => channel.type === CHANNEL_TEXT);
+      firstTextChannel && navigate(`/app/${serverId}/${firstTextChannel._id}`);
     } else {
       setCurrentChannel(null);
     }
@@ -82,6 +93,7 @@ function Main() {
           isVisible={isSidebarVisible}
           servers={servers}
           channels={channels}
+          channelsLoading={channelsLoading}
           currentServer={currentServer}
           onToggle={() => width < MAX_MOBILE_WIDTH && toggleSidebarVisible()}
           onNewServer={() => setOpenModal(NEWSERVER)}
@@ -93,7 +105,10 @@ function Main() {
           }}
           onEditProfile={() => setOpenModal(EDITPROFILE)}
           onOpenServerInvite={() => setOpenModal(SERVERINVITE)}
-          onSignOut={() => signOut(auth)}
+          onSignOut={() => {
+            setUser(undefined);
+            setToken(undefined);
+          }}
         />
         <div
           className={
@@ -117,20 +132,20 @@ function Main() {
           <ServerForm
             onClose={() => setOpenModal(null)}
             isNew={false}
-            serverId={currentServer?.id}
+            serverId={currentServer?._id}
             currentName={currentServer?.name}
-            currentIconUrl={currentServer?.iconUrl}
+            currentIconUrl={currentServer?.icon}
           />
         </Modal>
         <Modal open={openModal === NEWCHANNEL} dimBackdrop={true} locked={false} onClose={() => setOpenModal(null)}>
-          <ChannelForm onClose={() => setOpenModal(null)} isNew={true} serverId={currentServer?.id} />
+          <ChannelForm onClose={() => setOpenModal(null)} isNew={true} serverId={currentServer?._id} />
         </Modal>
         <Modal open={openModal === EDITCHANNEL} dimBackdrop={true} locked={false} onClose={() => setOpenModal(null)}>
           <ChannelForm
             onClose={() => setOpenModal(null)}
             isNew={false}
-            serverId={currentServer?.id}
-            channelId={channelToEdit?.id}
+            serverId={currentServer?._id}
+            channelId={channelToEdit?._id}
             currentName={channelToEdit?.name}
             currentType={channelToEdit?.type}
           />
@@ -139,13 +154,13 @@ function Main() {
           <UserForm
             isNew={false}
             currentEmail={user?.email}
-            currentUsername={user?.displayName}
-            currentAvatarUrl={user?.photoURL}
+            currentUsername={user?.name}
+            currentAvatarUrl={user?.avatar}
             onSubmit={() => setOpenModal(null)}
           />
         </Modal>
         <Modal open={openModal === SERVERINVITE} dimBackdrop={true} locked={false} onClose={() => setOpenModal(null)}>
-          <ServerInvite serverName={currentServer?.name} serverId={currentServer?.id} />
+          <ServerInvite serverName={currentServer?.name} serverId={currentServer?._id} />
         </Modal>
       </div>
     );
