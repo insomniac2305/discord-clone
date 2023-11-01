@@ -5,24 +5,32 @@ import useBackendRequest from "./useBackendRequest";
 function useAuth() {
   const [user, setUser] = useState();
   const [token, setToken] = useLocalStorage("token");
-  const [requestUser, userData, userLoading, userError] = useBackendRequest("api/users/me");
+  const [authLoading, setAuthLoading] = useState(true);
+  const [requestUser, userData, , userError] = useBackendRequest("api/users/me");
 
   useEffect(() => {
-    if (token) {
-      requestUser(token);
-    }
+    const verifyToken = async () => {
+      if (token) {
+        await requestUser(token);
+      } else {
+        setAuthLoading(false);
+      }
+    };
+
+    verifyToken();
   }, []);
 
   useEffect(() => {
-    if (userData && !userError && !userLoading) {
-      setUser(userData);
-    } else if (userError) {
-      setUser(undefined);
-      setToken(undefined);
+    if (userData || userError) {
+      setUser(userData || undefined);
+      setAuthLoading(false);
+      if (userError) {
+        setToken(undefined);
+      }
     }
-  }, [userData, userError, userLoading]);
+  }, [userData, userError]);
 
-  return [user, setUser, token, setToken, userLoading];
+  return [user, setUser, token, setToken, authLoading];
 }
 
 export default useAuth;
