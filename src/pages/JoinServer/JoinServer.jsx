@@ -1,30 +1,41 @@
-import React, { useContext, useEffect } from "react";
+import React, { useContext, useEffect, useRef } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import useAddServerMember from "../../hooks/useAddServerMember";
 import AuthContext from "../../util/AuthContext";
 import { ROLE_MEMBER } from "../../util/Constants";
 import LoadingScreen from "../../components/LoadingScreen";
+import useBackendRequest from "../../hooks/useBackendRequest";
 
 function JoinServer() {
   const navigate = useNavigate();
   const { serverId } = useParams();
-  const { user } = useContext(AuthContext);
-  const [addServerMember, loading, error] = useAddServerMember();
+  const { user, token, authLoading } = useContext(AuthContext);
+  const [submitServerMember, submitData, submitLoading, submitError] = useBackendRequest(
+    serverId && `api/servers/${serverId}/members`
+  );
+  const isSubmitted = useRef(false);
 
   useEffect(() => {
     const addCurrentUserToServer = async () => {
       if (user && serverId) {
-        await addServerMember(user._id, serverId, ROLE_MEMBER, user.name, user.avatar);
-        !error && navigate("/app/" + serverId);
-      } else {
+        if (isSubmitted.current) return;
+        isSubmitted.current = true;
+
+        await submitServerMember(token, "POST", { userid: user._id, role: ROLE_MEMBER });
+      } else if (!authLoading) {
         navigate("/app");
       }
     };
 
     addCurrentUserToServer();
-  }, []);
+  }, [user]);
 
-  return <LoadingScreen loading={loading} error={error} />;
+  useEffect(() => {
+    if (submitData) {
+      navigate("/app/" + serverId);
+    }
+  }, [submitData]);
+
+  return <LoadingScreen loading={submitLoading || authLoading} error={submitError} />;
 }
 
 export default JoinServer;
