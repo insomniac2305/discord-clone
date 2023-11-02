@@ -23,10 +23,10 @@ function UserForm({ isNew, onSubmit }) {
   );
 
   useEffect(() => {
-    if (currentUser) {
+    if (isNew && currentUser) {
       navigate("/app");
     }
-  }, [currentUser, navigate]);
+  }, [isNew, currentUser, navigate]);
 
   useEffect(() => {
     if (userData) {
