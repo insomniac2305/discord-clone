@@ -37,21 +37,15 @@ function Main() {
   const [requestChannels, channels, channelsLoading] = useBackendRequest(
     serverId && `api/servers/${serverId}/channels`
   );
-  const [currentChannel, setCurrentChannel] = useState(null);
-  const [currentServer, setCurrentServer] = useState(null);
   const [channelToEdit, setChannelToEdit] = useState(null);
+  let currentServer;
+  let currentChannel;
 
   useEffect(() => {
     if (!user && !authLoading) {
       navigate("/login");
     }
   }, [user, authLoading]);
-
-  useEffect(() => {
-    if (width >= MAX_MOBILE_WIDTH && !isSidebarVisible) {
-      toggleSidebarVisible();
-    }
-  }, [width]);
 
   useEffect(() => {
     if (user && token) {
@@ -66,23 +60,29 @@ function Main() {
   }, [user, token, serverId]);
 
   useEffect(() => {
-    if (serverId && servers) {
-      const serverFromList = servers.find((server) => server._id === serverId);
-      setCurrentServer({ ...serverFromList });
-    }
-  }, [serverId, servers]);
-
-  useEffect(() => {
-    if (channels && channelId) {
-      const channelFromList = channels.find((channel) => channel._id === channelId);
-      setCurrentChannel({ ...channelFromList });
-    } else if (serverId && channels && !channelId) {
+    if (serverId && channels && !channelId) {
       const firstTextChannel = channels.find((channel) => channel.type === CHANNEL_TEXT);
-      firstTextChannel && navigate(`/app/${serverId}/${firstTextChannel._id}`);
-    } else {
-      setCurrentChannel(null);
+      currentServer?.channels?.includes(firstTextChannel?._id) && navigate(`/app/${serverId}/${firstTextChannel._id}`);
     }
   }, [serverId, channels, channelId]);
+
+  useEffect(() => {
+    if (width >= MAX_MOBILE_WIDTH && !isSidebarVisible) {
+      toggleSidebarVisible();
+    }
+  }, [width]);
+
+  if (serverId && servers) {
+    const serverFromList = servers.find((server) => server._id === serverId);
+    currentServer = { ...serverFromList };
+  }
+
+  if (channelId && channels) {
+    const channelFromList = channels.find((channel) => channel._id === channelId);
+    currentChannel = { ...channelFromList };
+  } else {
+    currentChannel = undefined;
+  }
 
   if (authLoading || serversLoading) {
     return <LoadingScreen loading={true} />;
@@ -123,7 +123,9 @@ function Main() {
             currentChannel={currentChannel}
           />
           {!serverId && <ChannelPlaceholder />}
-          {!!serverId && <ChannelContent serverId={serverId} currentChannel={currentChannel} isMembersVisible={isMembersVisible} />}
+          {!!serverId && (
+            <ChannelContent serverId={serverId} currentChannel={currentChannel} isMembersVisible={isMembersVisible} />
+          )}
         </div>
         <Modal open={openModal === NEWSERVER} dimBackdrop={true} locked={false} onClose={() => setOpenModal(null)}>
           <ServerForm onClose={() => setOpenModal(null)} isNew={true} />
