@@ -11,7 +11,7 @@ function ChannelHeader({ showSidebarToggle, onToggleSidebar, currentChannel, onT
           <HiMenu />
         </button>
       )}
-      {currentChannel !== null && (
+      {currentChannel && (
         <>
           <div className="flex items-center gap-2 px-2">
             <FaHashtag className="text-xl text-gray-600" />
