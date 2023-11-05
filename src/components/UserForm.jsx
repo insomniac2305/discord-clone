@@ -11,7 +11,7 @@ import useLogin from "../hooks/useLogin";
 import FormError from "./FormError";
 
 function UserForm({ isNew, onSubmit }) {
-  const { user: currentUser, token: currentToken, authLoading } = useContext(AuthContext);
+  const { user: currentUser, setUser, token: currentToken, authLoading } = useContext(AuthContext);
   const [email, setEmail] = useState(currentUser?.email || "");
   const [username, setUsername] = useState(currentUser?.name || "");
   const [password, setPassword] = useState("");
@@ -29,8 +29,11 @@ function UserForm({ isNew, onSubmit }) {
   }, [isNew, currentUser, navigate]);
 
   useEffect(() => {
-    if (userData) {
-      isNew ? submitLogin(email, password) : onSubmit();
+    if (userData && isNew) {
+      submitLogin(email, password);
+    } else if (userData && !isNew) {
+      setUser(userData);
+      onSubmit();
     }
   }, [isNew, userData]);
 

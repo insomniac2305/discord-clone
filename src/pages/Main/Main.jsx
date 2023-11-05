@@ -128,11 +128,20 @@ function Main() {
           )}
         </div>
         <Modal open={openModal === NEWSERVER} dimBackdrop={true} locked={false} onClose={() => setOpenModal(null)}>
-          <ServerForm onClose={() => setOpenModal(null)} isNew={true} />
+          <ServerForm
+            onClose={() => {
+              setOpenModal(null);
+              requestServers(token);
+            }}
+            isNew={true}
+          />
         </Modal>
         <Modal open={openModal === EDITSERVER} dimBackdrop={true} locked={false} onClose={() => setOpenModal(null)}>
           <ServerForm
-            onClose={() => setOpenModal(null)}
+            onClose={() => {
+              setOpenModal(null);
+              requestServers(token);
+            }}
             isNew={false}
             serverId={currentServer?._id}
             currentName={currentServer?.name}
@@ -144,7 +153,10 @@ function Main() {
         </Modal>
         <Modal open={openModal === EDITCHANNEL} dimBackdrop={true} locked={false} onClose={() => setOpenModal(null)}>
           <ChannelForm
-            onClose={() => setOpenModal(null)}
+            onClose={() => {
+              setOpenModal(null);
+              requestChannels(token);
+            }}
             isNew={false}
             serverId={currentServer?._id}
             channelId={channelToEdit?._id}
