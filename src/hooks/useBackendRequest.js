@@ -31,15 +31,15 @@ function useBackendRequest(endpoint) {
     }
   }, [endpoint]);
 
-  const execute = async (token, method, body, hasFiles) => {
+  const execute = async (token, method, body) => {
     const headers = {};
-    if (body) headers["Content-Type"] = hasFiles ? "multipart/form-data" : "application/json";
+    if (body && !(body instanceof FormData)) headers["Content-Type"] = "application/json";
     if (token) headers["Authorization"] = "Bearer " + token;
 
     const options = {
       method: method || "GET",
       headers,
-      body: JSON.stringify(body),
+      body: body instanceof FormData ? body : JSON.stringify(body),
       mode: "cors",
     };
 

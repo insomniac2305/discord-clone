@@ -41,17 +41,13 @@ function UserForm({ isNew, onSubmit }) {
 
   const update = (e) => {
     e.preventDefault();
-    submitUser(
-      currentToken,
-      "PUT",
-      {
-        email: email !== currentUser.email ? email : null,
-        name: username !== currentUser.name ? username : null,
-        password: password !== "" ? password : null,
-        avatar: avatar !== currentUser.avatar ? avatar : null,
-      },
-      avatar !== currentUser.avatar
-    );
+    const body = new FormData();
+    email !== currentUser.email && body.append("email", email);
+    username !== currentUser.name && body.append("name", username);
+    password !== "" && body.append("password", password);
+    avatar !== currentUser.avatar && body.append("avatar", avatar);
+
+    submitUser(currentToken, "PUT", body);
   };
 
   return (
