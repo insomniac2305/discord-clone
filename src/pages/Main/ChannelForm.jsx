@@ -1,27 +1,40 @@
-import React, { useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import TextInput from "../../components/TextInput";
 import PrimaryButton from "../../components/PrimaryButton";
-import useCreateChannel from "../../hooks/useCreateChannel";
 import { CHANNEL_TEXT, CHANNEL_VOICE } from "../../util/Constants";
 import { FaHashtag } from "react-icons/fa";
 import { HiVolumeUp } from "react-icons/hi";
-import useUpdateChannel from "../../hooks/useUpdateChannel";
+import useBackendRequest from "../../hooks/useBackendRequest";
+import AuthContext from "../../util/AuthContext";
+import FormError from "../../components/FormError";
 
 function ChannelForm({ onClose, isNew, serverId, channelId, currentName, currentType }) {
   const [channelName, setChannelName] = useState(currentName || "");
   const [channelType, setChannelType] = useState(currentType || CHANNEL_TEXT);
-  const [createChannel, createLoading, createError] = useCreateChannel(onClose);
-  const [updateChannel, updateLoading, updateError] = useUpdateChannel(onClose);
+  const { token } = useContext(AuthContext);
+  const [submitChannel, submitData, submitLoading, submitError] = useBackendRequest(
+    serverId
+      ? channelId && !isNew
+        ? `api/servers/${serverId}/channels/${channelId}`
+        : `api/servers/${serverId}/channels`
+      : undefined
+  );
+
+  useEffect(() => {
+    if (submitData) {
+      onClose();
+    }
+  }, [submitData]);
 
   const create = async (e) => {
     e.preventDefault();
-    await createChannel(serverId, channelName, channelType);
+    await submitChannel(token, "POST", { name: channelName, type: channelType });
   };
 
   const update = async (e) => {
     e.preventDefault();
-    await updateChannel(channelId, {
-      channelName: channelName !== currentName ? channelName : null,
+    await submitChannel(token, "PUT", {
+      name: channelName !== currentName ? channelName : null,
     });
   };
 
@@ -60,14 +73,8 @@ function ChannelForm({ onClose, isNew, serverId, channelId, currentName, current
         required={true}
         onChange={setChannelName}
       />
-      {(createError || updateError) && (
-        <p className="pb-2 text-sm text-red">There was an error: {createError?.message || updateError?.message}</p>
-      )}
-      <PrimaryButton
-        text={isNew ? "Create Channel" : "Save Changes"}
-        type="submit"
-        loading={createLoading || updateLoading}
-      />
+      {submitError && <FormError error={submitError} />}
+      <PrimaryButton text={isNew ? "Create Channel" : "Save Changes"} type="submit" loading={submitLoading} />
     </form>
   );
 }
