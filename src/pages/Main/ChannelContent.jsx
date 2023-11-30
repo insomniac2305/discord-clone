@@ -42,7 +42,7 @@ function ChannelContent({ isMembersVisible, serverId, currentChannel }) {
   useEffect(() => {
     const channelId = currentChannel?._id;
 
-    channelId && socket.emit("joinChannel", channelId);
+    channelId && socket.emit("joinChannel", channelId, token);
 
     return () => {
       channelId && socket.emit("leaveChannel", channelId);
