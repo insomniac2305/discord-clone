@@ -26,7 +26,7 @@ function MessageList({ messages }) {
           }
 
           const isFollowUp =
-            message.user === previousMessage?.user &&
+            message.user?._id === previousMessage?.user?._id &&
             messageDate?.valueOf() - prevMessageDate?.valueOf() < 60000;
 
           listItem.push(
