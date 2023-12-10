@@ -14,7 +14,6 @@ import {
   NEWCHANNEL,
   EDITCHANNEL,
 } from "../../util/Constants";
-import useWindowDimensions from "../../hooks/useWindowDimensions";
 import useToggle from "../../hooks/useToggle";
 import ChannelPlaceholder from "./ChannelPlaceholder";
 import ChannelContent from "./ChannelContent";
@@ -24,13 +23,14 @@ import LoadingScreen from "../../components/LoadingScreen";
 import ServerInvite from "./ServerInvite";
 import ChannelForm from "./ChannelForm";
 import useBackendRequest from "../../hooks/useBackendRequest";
+import useWindowWidthThreshold from "../../hooks/useWindowWidthThreshold";
 
 function Main() {
   const navigate = useNavigate();
   const [openModal, setOpenModal] = useState(null);
   const [isSidebarVisible, toggleSidebarVisible] = useToggle(true);
   const [isMembersVisible, toggleMembersVisible] = useToggle(false);
-  const { width } = useWindowDimensions();
+  const isMobileWidth = useWindowWidthThreshold(MAX_MOBILE_WIDTH);
   const { user, setUser, token, setToken, authLoading } = useContext(AuthContext);
   let { serverId, channelId } = useParams();
   const [requestServers, servers, serversLoading] = useBackendRequest("api/servers");
@@ -67,10 +67,10 @@ function Main() {
   }, [serverId, channels, channelId]);
 
   useEffect(() => {
-    if (width >= MAX_MOBILE_WIDTH && !isSidebarVisible) {
+    if (!isMobileWidth && !isSidebarVisible) {
       toggleSidebarVisible();
     }
-  }, [width]);
+  }, [isMobileWidth]);
 
   if (serverId && servers) {
     const serverFromList = servers.find((server) => server._id === serverId);
@@ -95,7 +95,7 @@ function Main() {
           channels={channels}
           channelsLoading={channelsLoading}
           currentServer={currentServer}
-          onToggle={() => width < MAX_MOBILE_WIDTH && toggleSidebarVisible()}
+          onToggle={() => isMobileWidth && toggleSidebarVisible()}
           onNewServer={() => setOpenModal(NEWSERVER)}
           onEditServer={() => setOpenModal(EDITSERVER)}
           onNewChannel={() => setOpenModal(NEWCHANNEL)}
@@ -117,14 +117,19 @@ function Main() {
           }
         >
           <ChannelHeader
-            showSidebarToggle={width < MAX_MOBILE_WIDTH}
+            showSidebarToggle={isMobileWidth}
             onToggleSidebar={toggleSidebarVisible}
             onToggleMembers={toggleMembersVisible}
             currentChannel={currentChannel}
           />
           {!serverId && <ChannelPlaceholder />}
           {!!serverId && (
-            <ChannelContent serverId={serverId} currentChannel={currentChannel} isMembersVisible={isMembersVisible} />
+            <ChannelContent
+              serverId={serverId}
+              currentChannel={currentChannel}
+              isMembersVisible={isMembersVisible}
+              key={currentChannel?._id}
+            />
           )}
         </div>
         <Modal open={openModal === NEWSERVER} dimBackdrop={true} locked={false} onClose={() => setOpenModal(null)}>
