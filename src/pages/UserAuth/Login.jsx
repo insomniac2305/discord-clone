@@ -7,7 +7,7 @@ import { useNavigate } from "react-router-dom";
 import AuthContext from "../../util/AuthContext";
 import useLogin from "../../hooks/useLogin";
 import FormError from "../../components/FormError";
-import { STYLE_PRIMARY } from "../../util/Constants";
+import { STYLE_PRIMARY, STYLE_SECONDARY } from "../../util/Constants";
 
 function Login() {
   const [email, setEmail] = useState("");
@@ -25,6 +25,11 @@ function Login() {
   const onSubmit = (e) => {
     e.preventDefault();
     submitLogin(email, password);
+  };
+
+  const onDemoLogin = () => {
+    setEmail("demo@test.com");
+    setPassword("secret");
   };
 
   return (
@@ -51,10 +56,11 @@ function Login() {
             <LinkButton text="Forgot password?" />
           </p>
         </div>
-        <div className="w-full">
+        <div className="grid w-full gap-2">
           {loginError && <FormError error={loginError} />}
           <Button text="Sign in" type="submit" loading={loginLoading} style={STYLE_PRIMARY} />
-          <p className="mt-2 w-full text-left text-xs tracking-wide text-gray-500">
+          <Button text="Sign in with demo user" type="submit" loading={loginLoading} style={STYLE_SECONDARY} onClick={onDemoLogin} />
+          <p className="w-full text-left text-xs tracking-wide text-gray-500">
             Need an account? <LinkButton text="Register" onClick={() => navigate("/register")} />
           </p>
         </div>
