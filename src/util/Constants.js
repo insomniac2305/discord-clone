@@ -11,3 +11,5 @@ export const CHANNEL_VOICE = "voice";
 export const ROLE_ADMIN = "admin";
 export const ROLE_MEMBER = "member";
 export const MAX_MOBILE_WIDTH = 1024;
+export const STYLE_PRIMARY = 1;
+export const STYLE_SECONDARY = 2;

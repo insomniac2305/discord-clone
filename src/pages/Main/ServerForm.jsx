@@ -1,10 +1,11 @@
 import React, { useContext, useEffect, useState } from "react";
 import TextInput from "../../components/TextInput";
-import PrimaryButton from "../../components/PrimaryButton";
+import Button from "../../components/Button";
 import IconPicker from "../../components/IconPicker";
 import useBackendRequest from "../../hooks/useBackendRequest";
 import AuthContext from "../../util/AuthContext";
 import FormError from "../../components/FormError";
+import { STYLE_PRIMARY } from "../../util/Constants";
 
 function ServerForm({ onClose, isNew, serverId, currentName, currentIconUrl }) {
   const [serverName, setServerName] = useState(currentName || "");
@@ -61,7 +62,7 @@ function ServerForm({ onClose, isNew, serverId, currentName, currentIconUrl }) {
           Cancel
         </button>
         <div className="w-28">
-          <PrimaryButton text={isNew ? "Continue" : "Save"} type="submit" loading={submitLoading} />
+          <Button text={isNew ? "Continue" : "Save"} type="submit" loading={submitLoading} style={STYLE_PRIMARY} />
         </div>
       </div>
     </form>

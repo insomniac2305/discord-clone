@@ -1,7 +1,7 @@
 import React, { useContext, useEffect, useState } from "react";
 import TextInput from "../../components/TextInput";
-import PrimaryButton from "../../components/PrimaryButton";
-import { CHANNEL_TEXT, CHANNEL_VOICE } from "../../util/Constants";
+import Button from "../../components/Button";
+import { CHANNEL_TEXT, CHANNEL_VOICE, STYLE_PRIMARY } from "../../util/Constants";
 import { FaHashtag } from "react-icons/fa";
 import { HiVolumeUp } from "react-icons/hi";
 import useBackendRequest from "../../hooks/useBackendRequest";
@@ -74,7 +74,12 @@ function ChannelForm({ onClose, isNew, serverId, channelId, currentName, current
         onChange={setChannelName}
       />
       {submitError && <FormError error={submitError} />}
-      <PrimaryButton text={isNew ? "Create Channel" : "Save Changes"} type="submit" loading={submitLoading} />
+      <Button
+        text={isNew ? "Create Channel" : "Save Changes"}
+        type="submit"
+        loading={submitLoading}
+        style={STYLE_PRIMARY}
+      />
     </form>
   );
 }

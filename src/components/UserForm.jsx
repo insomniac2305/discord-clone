@@ -2,13 +2,14 @@ import React, { useContext, useEffect, useState } from "react";
 import Logo from "./Logo";
 import TextInput from "./TextInput";
 import LinkButton from "./LinkButton";
-import PrimaryButton from "./PrimaryButton";
+import Button from "./Button";
 import IconPicker from "./IconPicker";
 import { useNavigate } from "react-router-dom";
 import AuthContext from "../util/AuthContext";
 import useBackendRequest from "../hooks/useBackendRequest";
 import useLogin from "../hooks/useLogin";
 import FormError from "./FormError";
+import { STYLE_PRIMARY } from "../util/Constants";
 
 function UserForm({ isNew, onSubmit }) {
   const { user: currentUser, setUser, token: currentToken, authLoading } = useContext(AuthContext);
@@ -89,10 +90,11 @@ function UserForm({ isNew, onSubmit }) {
         />
         <div className="w-full">
           {userError && <FormError error={userError} />}
-          <PrimaryButton
+          <Button
             text={isNew ? "Continue" : "Save"}
             loading={userLoading || authLoading || loginLoading}
             type={"submit"}
+            style={STYLE_PRIMARY}
           />
           {isNew && (
             <p className="mt-2 w-full text-left text-xs tracking-wide text-gray-500">

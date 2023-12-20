@@ -2,11 +2,12 @@ import Logo from "../../components/Logo";
 import React, { useContext, useEffect, useState } from "react";
 import TextInput from "../../components/TextInput";
 import LinkButton from "../../components/LinkButton";
-import PrimaryButton from "../../components/PrimaryButton";
+import Button from "../../components/Button";
 import { useNavigate } from "react-router-dom";
 import AuthContext from "../../util/AuthContext";
 import useLogin from "../../hooks/useLogin";
 import FormError from "../../components/FormError";
+import { STYLE_PRIMARY } from "../../util/Constants";
 
 function Login() {
   const [email, setEmail] = useState("");
@@ -52,7 +53,7 @@ function Login() {
         </div>
         <div className="w-full">
           {loginError && <FormError error={loginError} />}
-          <PrimaryButton text="Sign in" type="submit" loading={loginLoading} />
+          <Button text="Sign in" type="submit" loading={loginLoading} style={STYLE_PRIMARY} />
           <p className="mt-2 w-full text-left text-xs tracking-wide text-gray-500">
             Need an account? <LinkButton text="Register" onClick={() => navigate("/register")} />
           </p>

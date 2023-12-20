@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import TextInput from "../../components/TextInput";
-import PrimaryButton from "../../components/PrimaryButton";
+import Button from "../../components/Button";
+import { STYLE_PRIMARY } from "../../util/Constants";
 
 function ServerInvite({ serverId, serverName }) {
   const { protocol, hostname, port } = window.location;
@@ -36,11 +37,12 @@ function ServerInvite({ serverId, serverName }) {
         value={baseUrl + "/join/" + serverId}
         readOnly={true}
       />
-      <PrimaryButton
+      <Button
         text={isCopied ? "Link copied!" : "Copy link"}
         onClick={() => {
           copyToClipboard(baseUrl + "/join/" + serverId);
         }}
+        style={STYLE_PRIMARY}
       />
     </div>
   );
