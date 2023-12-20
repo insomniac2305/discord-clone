@@ -55,9 +55,11 @@ function Modal({ open, onClose, children, locked, dimBackdrop }) {
       >
         {renderContent && (
           <>
-            <button className="absolute right-3 top-3 text-2xl text-gray-650" onClick={onClose}>
-              <HiX />
-            </button>
+            {locked || (
+              <button className="absolute right-3 top-3 text-2xl text-gray-650" onClick={onClose}>
+                <HiX />
+              </button>
+            )}
             {children}
           </>
         )}
