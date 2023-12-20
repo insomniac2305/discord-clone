@@ -56,7 +56,7 @@ function Login() {
             <LinkButton text="Forgot password?" />
           </p>
         </div>
-        <div className="grid w-full gap-2">
+        <div className="grid w-full gap-2 sm:grid-cols-2">
           {loginError && <FormError error={loginError} />}
           <Button text="Sign in" type="submit" loading={loginLoading} style={STYLE_PRIMARY} />
           <Button text="Sign in with demo user" type="submit" loading={loginLoading} style={STYLE_SECONDARY} onClick={onDemoLogin} />
